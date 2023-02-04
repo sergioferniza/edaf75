@@ -57,13 +57,17 @@ CREATE TABLE Ticket
     REFERENCES      Costumer(Username)
 );
 
-DROP TABLE IF EXISTS Costumer;
-CREATE TABLE Custumer
+DROP TABLE IF EXISTS Customer;
+CREATE TABLE Customer
 (
     Username        VARCHAR(50),
-    CustumerName    VARCHAR(50),
+    CustomerName    VARCHAR(50),
     UserPassword    VARCHAR(50),
 
     CONSTRAINT      PK_Costumer_Username PRIMARY KEY(Username),
     CONSTRAINT      UQ_Costumer_Username UNIQUE(Username)
 );
+
+-- Now insert data from CSV using SQLite3 commands
+.mode csv Customer
+.import SampleData_Customer.csv Customer
