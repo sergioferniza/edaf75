@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS Theater;
 CREATE TABLE Theater
 (
 TheaterName VARCHAR(50) NOT NULL,
@@ -7,6 +8,7 @@ CONSTRAINT PK_Theater_TheaterName PRIMARY KEY(TheaterName),
 CONSTRAINT UQ_Theater_ThraterName UNIQUE(TheaterName)
 )
 
+DROP TABLE IF EXISTS Performance;
 CREATE TABLE Performance
 (
 StartTime VARCHAR(50) NOT NULL,
@@ -24,6 +26,7 @@ CONSTRAINT FK_Performance_Ticket_TicketId FOREIGN KEY(TicketId)
 REFERENCES Ticket(TicketId)
 )
 
+DROP TABLE IF EXISTS Movie;
 CREATE TABLE Movie
 (
 MovieTitle VARCHAR(50) NOT NULL,
@@ -35,6 +38,7 @@ CONSTRAINT PK_Movie_MovieTitle PRIMARY KEY(MovieTitle),
 CONSTRAINT UQ_Movie_MovieTilte UNIQUE(MovieTitle)
 )
 
+DROP TABLE IF EXISTS Ticket;
 CREATE TABLE Ticket
 (
 TicketId uuid PRIMARY KEY NOT NULL,
@@ -44,6 +48,7 @@ CONSTRAINT FK_Ticket_Costumer_Username FOREIGN KEY(Username)
 REFERENCES Costumer(Username)
 )
 
+DROP TABLE IF EXISTS Costumer;
 CREATE TABLE Costumer
 (
 Username VARCHAR(50) NOT NULL,
