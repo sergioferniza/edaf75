@@ -1,7 +1,7 @@
 CREATE TABLE Theater
 (
-TheaterName VARCHAR(50),
-Capacity int,
+TheaterName VARCHAR(50) NOT NULL,
+Capacity int NOT NULL,
 
 CONSTRAINT PK_Theater_TheaterName PRIMARY KEY(TheaterName),
 CONSTRAINT UQ_Theater_ThraterName UNIQUE(TheaterName)
@@ -9,7 +9,7 @@ CONSTRAINT UQ_Theater_ThraterName UNIQUE(TheaterName)
 
 CREATE TABLE Performance
 (
-StartTime VARCHAR(50),
+StartTime VARCHAR(50) NOT NULL,
 TheaterName VARCHAR(50) NOT NULL,
 MovieTitle VARCHAR(50) NOT NULL,
 TicketId VARCHAR(50) NOT NULL,
@@ -26,10 +26,10 @@ REFERENCES Ticket(TicketId)
 
 CREATE TABLE Movie
 (
-MovieTitle VARCHAR(50),
-ProductionYear int,
-IMDBKey VARCHAR(50),
-RunningTime int,
+MovieTitle VARCHAR(50) NOT NULL,
+ProductionYear int NOT NULL,
+IMDBKey VARCHAR(50) NOT NULL,
+RunningTime int NOT NULL,
 
 CONSTRAINT PK_Movie_MovieTitle PRIMARY KEY(MovieTitle),
 CONSTRAINT UQ_Movie_MovieTilte UNIQUE(MovieTitle)
@@ -37,7 +37,7 @@ CONSTRAINT UQ_Movie_MovieTilte UNIQUE(MovieTitle)
 
 CREATE TABLE Ticket
 (
-TicketId uuid PRIMARY KEY,
+TicketId uuid PRIMARY KEY NOT NULL,
 Username VARCHAR(50) NOT NULL,
 
 CONSTRAINT FK_Ticket_Costumer_Username FOREIGN KEY(Username)
@@ -46,9 +46,9 @@ REFERENCES Costumer(Username)
 
 CREATE TABLE Costumer
 (
-Username VARCHAR(50),
-CostumerName VARCHAR(50),
-UserPassword VARCHAR(50),
+Username VARCHAR(50) NOT NULL,
+CostumerName VARCHAR(50) NOT NULL,
+UserPassword VARCHAR(50) NOT NULL,
 
 CONSTRAINT PK_Costumer_Username PRIMARY KEY(Username),
 CONSTRAINT UQ_Costumer_Username UNIQUE(Username)
