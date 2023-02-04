@@ -31,7 +31,8 @@ CREATE TABLE Theater
 
 CREATE TABLE Performance
 (
-    StartTime       VARCHAR(50),
+    StartTime       TIME,
+    PerformanceDate DATE,
     TheaterName     VARCHAR(50) NOT NULL,
     MovieTitle      VARCHAR(50) NOT NULL,
     TicketId        VARCHAR(50) NOT NULL,

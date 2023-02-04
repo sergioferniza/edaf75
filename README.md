@@ -26,3 +26,9 @@ To recreate the .sqlite database file, run the following shell command
 ```
 sqlite3 theaters.sqlite < $SQL_SCRIPT$.sql
 ```
+
+## E/R - UML Diagrams
+I noticed we forgot to add one attribute to
+our `Performance` table: `performance_time`
+which is the `DATE` data type. I already
+added this to my cleaned up SQL script.
