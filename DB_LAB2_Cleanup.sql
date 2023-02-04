@@ -58,10 +58,10 @@ CREATE TABLE Ticket
 );
 
 DROP TABLE IF EXISTS Costumer;
-CREATE TABLE Costumer
+CREATE TABLE Custumer
 (
     Username        VARCHAR(50),
-    CostumerName    VARCHAR(50),
+    CustumerName    VARCHAR(50),
     UserPassword    VARCHAR(50),
 
     CONSTRAINT      PK_Costumer_Username PRIMARY KEY(Username),
