@@ -1,6 +1,6 @@
 # EDAF75 Lab 2:
 ## Note:
-I think it is best if we add data from a .csv 
+For testing, we can quickly add data from a .csv 
 file instead of using lots of 
 ```sql
 INSERT OR REPLACE
@@ -8,7 +8,10 @@ INTO   TABLE(param1, param2, param3)
 VALUES ('asdf', 'asdf', 'asdf'),
 ...
 ```
-in our DB setup .sql scripts. <br> <br>
+in our DB setup .sql scripts 
+**BUT the instructions do suggest some manual
+statements like that.**
+<br> <br>
 To do this, I suggest creating the data in Excel,
 then saving it as a CSV (comma delimited) file,
 and removing the header (first row) in a text

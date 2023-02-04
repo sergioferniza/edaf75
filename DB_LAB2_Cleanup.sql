@@ -4,10 +4,22 @@
 -- Cleanup of original database setup file
 --
 -- TODO:
+-- ** Rename to lab2.sql later
 -- Consider switching variables to snake case (as seen in lectures)
 -- Consider changing table names to plural (as seen in lecture notes)
 
+-- Init
+PRAGMA foreign_keys=OFF;
+
 DROP TABLE IF EXISTS Theater;
+DROP TABLE IF EXISTS Performance;
+DROP TABLE IF EXISTS Movie;
+DROP TABLE IF EXISTS Ticket;
+DROP TABLE IF EXISTS Customer;
+
+PRAGMA foreign_keys=ON;
+
+-- Create tables
 CREATE TABLE Theater
 (
     TheaterName     VARCHAR(50),
@@ -17,7 +29,6 @@ CREATE TABLE Theater
     CONSTRAINT      UQ_Theater_ThraterName UNIQUE(TheaterName)
 );
 
-DROP TABLE IF EXISTS Performance;
 CREATE TABLE Performance
 (
     StartTime       VARCHAR(50),
@@ -35,29 +46,26 @@ CREATE TABLE Performance
     REFERENCES      Ticket(TicketId)
 );
 
-DROP TABLE IF EXISTS Movie;
 CREATE TABLE Movie
 (
     MovieTitle      VARCHAR(50),
     ProductionYear  INT,
-    IMDBKey         VARCHAR(50),
+    IMDBKey         CHAR(9),
     RunningTime     INT,
 
     CONSTRAINT      PK_Movie_MovieTitle PRIMARY KEY(MovieTitle),
     CONSTRAINT      UQ_Movie_MovieTilte UNIQUE(MovieTitle)
 );
 
-DROP TABLE IF EXISTS Ticket;
 CREATE TABLE Ticket
 (
-    TicketId        UUID PRIMARY KEY,
+    TicketId        TEXT DEFAULT (lower(hex(randomblob(16)))),
     Username        VARCHAR(50) NOT NULL,
 
     CONSTRAINT      FK_Ticket_Costumer_Username FOREIGN KEY(Username)
     REFERENCES      Costumer(Username)
 );
 
-DROP TABLE IF EXISTS Customer;
 CREATE TABLE Customer
 (
     Username        VARCHAR(50),
@@ -68,6 +76,11 @@ CREATE TABLE Customer
     CONSTRAINT      UQ_Costumer_Username UNIQUE(Username)
 );
 
--- Now insert data from CSV using SQLite3 commands
+
+-- Now insert test data from CSV using SQLite3 commands
 .mode csv Customer
 .import SampleData_Customer.csv Customer
+
+.mode csv Movie
+.import SampleData_Movie.csv Movie
+-- NOTE: Replace the import commands above with real INSERT commands later
