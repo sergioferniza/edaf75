@@ -35,16 +35,17 @@ CREATE TABLE Performance
     PerformanceDate DATE,
     TheaterName     VARCHAR(50) NOT NULL,
     MovieTitle      VARCHAR(50) NOT NULL,
-    TicketId        VARCHAR(50) NOT NULL,
+    -- TicketId        VARCHAR(50) NOT NULL,             -- We did not intially plan to have this
+    -- Other keys should be enough for joining/linking
 
-    CONSTRAINT      PK_Performance_StartTime             PRIMARY KEY(StartTime),
-    CONSTRAINT      UQ_Performance_StartTime             UNIQUE(StartTime),
+    CONSTRAINT      PK_Performance_StartTime             PRIMARY KEY(StartTime, PerformanceDate),
+    --CONSTRAINT      UQ_Performance_StartTime             UNIQUE(StartTime),     -- Does not have to be unique if we have dates too
     CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
     REFERENCES      Theater(TheaterName),
     CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(MovieTitle)
-    REFERENCES      Movie(MovieTitle),
-    CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
-    REFERENCES      Ticket(TicketId)
+    REFERENCES      Movie(MovieTitle)
+    -- CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
+    -- REFERENCES      Ticket(TicketId)
 );
 
 CREATE TABLE Movie
@@ -84,4 +85,7 @@ CREATE TABLE Customer
 
 .mode csv Movie
 .import SampleData_Movie.csv Movie
+
+--.mode csv Performance
+--.import SampleData_Performance.csv Performance
 -- NOTE: Replace the import commands above with real INSERT commands later

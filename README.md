@@ -1,4 +1,18 @@
 # EDAF75 Lab 2:
+
+## Work Log:
+### Jacob:
+2/5/23:
+* Cleaned up initial DB scheme from Sergio 
+* Added `lab2-nb.ipynb` file to repo
+* Added CSV sample data files (used in DB setup)
+* Created this `README.md` file
+* Added the .drawio files with our UML diagrams
+### Sergio:
+asdf
+### Tom
+asdf
+
 ## Note:
 For testing, we can quickly add data from a .csv 
 file instead of using lots of 
@@ -26,6 +40,10 @@ To recreate the .sqlite database file, run the following shell command
 ```
 sqlite3 theaters.sqlite < $SQL_SCRIPT$.sql
 ```
+
+**For submission, rename SQL file and DB file**: <br>
+SQL file should be `lab2.sql` and 
+DB file should be `movies.sqlite`
 
 ## E/R - UML Diagrams
 I noticed we forgot to add one attribute to
