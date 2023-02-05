@@ -31,6 +31,7 @@ CREATE TABLE Theater
 
 CREATE TABLE Performance
 (
+    TicketId        VARCHAR(32),
     StartTime       TIME,
     PerformanceDate DATE,
     TheaterName     VARCHAR(50) NOT NULL,
@@ -38,12 +39,12 @@ CREATE TABLE Performance
     -- TicketId        VARCHAR(50) NOT NULL,             -- We did not intially plan to have this
     -- Other keys should be enough for joining/linking
 
-    CONSTRAINT      PK_Performance_StartTime             PRIMARY KEY(StartTime, PerformanceDate),
-    --CONSTRAINT      UQ_Performance_StartTime             UNIQUE(StartTime),     -- Does not have to be unique if we have dates too
-    CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
-    REFERENCES      Theater(TheaterName),
-    CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(MovieTitle)
-    REFERENCES      Movie(MovieTitle)
+    CONSTRAINT      PK_TicketId            PRIMARY KEY(TicketId)
+    -- ** THERE IS SOME BUG IN THE CONSTRAINTS BELOW
+    -- CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
+    -- REFERENCES      Theater(TheaterName),
+    -- CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(MovieTitle)
+    -- REFERENCES      Movie(MovieTitle)
     -- CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
     -- REFERENCES      Ticket(TicketId)
 );
@@ -86,6 +87,14 @@ CREATE TABLE Customer
 .mode csv Movie
 .import SampleData_Movie.csv Movie
 
---.mode csv Performance
---.import SampleData_Performance.csv Performance
+-- .mode csv Performance
+-- .import SampleData_Performance.csv Performance
+-- PRAGMA foreign_keys = off;
+-- BEGIN TRANSACTION;
+INSERT OR   REPLACE
+INTO        Performance(StartTime, PerformanceDate, TheaterName, MovieTitle)
+VALUES      ("10:00","2022-12-10","Artcraft Theater","Avatar: The Way of Water")
+-- END TRANSACTION;
+-- PRAGMA foreign_keys = on;
+
 -- NOTE: Replace the import commands above with real INSERT commands later

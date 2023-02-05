@@ -50,3 +50,6 @@ I noticed we forgot to add one attribute to
 our `Performance` table: `performance_time`
 which is the `DATE` data type. I already
 added this to my cleaned up SQL script.
+
+## Foreign Key Referencing
+1. When we add data to the `Ticket`, a random UUID is created for `TicketId`. How can we use the same UUIDs in the `Performance` table?
