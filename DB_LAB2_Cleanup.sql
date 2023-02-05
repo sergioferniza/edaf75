@@ -25,8 +25,7 @@ CREATE TABLE Theater
     TheaterName     VARCHAR(50),
     Capacity        INT,
 
-    CONSTRAINT      PK_Theater_TheaterName  PRIMARY KEY(TheaterName)
-    --CONSTRAINT      UQ_Theater_ThraterName  UNIQUE(TheaterName)      -- Primary key already unique
+    CONSTRAINT      PK_Theater_TheaterName      PRIMARY KEY(TheaterName)
 );
 
 CREATE TABLE Performance
@@ -36,7 +35,7 @@ CREATE TABLE Performance
     TheaterName     VARCHAR(50) NOT NULL,
     MovieTitle      VARCHAR(50) NOT NULL,
 
-    CONSTRAINT      PK_DateTimeName         PRIMARY KEY(StartTime, PerformanceDate, TheaterName)
+    CONSTRAINT      PK_DateTimeName             PRIMARY KEY(StartTime, PerformanceDate, TheaterName)
     -- ** NOTE: Constraints below will fail if there is no data in the other tables (referencing a NULL)
 
     -- CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
@@ -54,8 +53,7 @@ CREATE TABLE Movie
     IMDBKey         CHAR(9),
     RunningTime     INT,
 
-    CONSTRAINT      PK_Movie_MovieTitle PRIMARY KEY(MovieTitle),
-    CONSTRAINT      UQ_Movie_MovieTilte UNIQUE(MovieTitle)
+    CONSTRAINT      PK_Movie_MovieTitle         PRIMARY KEY(MovieTitle)
 );
 
 CREATE TABLE Ticket
@@ -68,6 +66,7 @@ CREATE TABLE Ticket
 
     CONSTRAINT      FK_Ticket_Costumer_Username FOREIGN KEY(Username)
     REFERENCES      Costumer(Username)
+    -- Need to define foreign keys in tuples IF defined as tuples for primary key in another table
     CONSTRAINT      FK_Performance              FOREIGN KEY(StartTime, PerformanceDate, TheaterName)
     REFERENCES      Performance(StartTime, PerformanceDate, TheaterName)
 );
@@ -78,9 +77,16 @@ CREATE TABLE Customer
     CustomerName    VARCHAR(50),
     UserPassword    VARCHAR(50),
 
-    CONSTRAINT      PK_Costumer_Username PRIMARY KEY(Username),
-    CONSTRAINT      UQ_Costumer_Username UNIQUE(Username)
+    CONSTRAINT      PK_Costumer_Username        PRIMARY KEY(Username)
 );
+
+
+-- ** Order of insertion
+-- 1. Customer
+-- 2. Theater
+-- 3. Movie
+-- 4. Performance
+-- 5. Ticket
 
 
 -- Now insert test data from CSV using SQLite3 commands
