@@ -25,24 +25,22 @@ CREATE TABLE Theater
     TheaterName     VARCHAR(50),
     Capacity        INT,
 
-    CONSTRAINT      PK_Theater_TheaterName PRIMARY KEY(TheaterName),
-    CONSTRAINT      UQ_Theater_ThraterName UNIQUE(TheaterName)
+    CONSTRAINT      PK_Theater_TheaterName  PRIMARY KEY(TheaterName)
+    --CONSTRAINT      UQ_Theater_ThraterName  UNIQUE(TheaterName)      -- Primary key already unique
 );
 
 CREATE TABLE Performance
 (
-    TicketId        VARCHAR(32),
     StartTime       TIME,
     PerformanceDate DATE,
     TheaterName     VARCHAR(50) NOT NULL,
     MovieTitle      VARCHAR(50) NOT NULL,
-    -- TicketId        VARCHAR(50) NOT NULL,             -- We did not intially plan to have this
-    -- Other keys should be enough for joining/linking
 
-    CONSTRAINT      PK_TicketId            PRIMARY KEY(TicketId)
-    -- ** THERE IS SOME BUG IN THE CONSTRAINTS BELOW
+    CONSTRAINT      PK_DateTimeName         PRIMARY KEY(StartTime, PerformanceDate, TheaterName)
+    -- ** NOTE: Constraints below will fail if there is no data in the other tables (referencing a NULL)
+
     -- CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
-    -- REFERENCES      Theater(TheaterName),
+    -- REFERENCES      Theater(TheaterName)
     -- CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(MovieTitle)
     -- REFERENCES      Movie(MovieTitle)
     -- CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
@@ -64,9 +62,14 @@ CREATE TABLE Ticket
 (
     TicketId        TEXT DEFAULT (lower(hex(randomblob(16)))),
     Username        VARCHAR(50) NOT NULL,
+    StartTime       TIME,
+    PerformanceDate DATE,
+    TheaterName     VARCHAR(50) NOT NULL,
 
     CONSTRAINT      FK_Ticket_Costumer_Username FOREIGN KEY(Username)
     REFERENCES      Costumer(Username)
+    CONSTRAINT      FK_Performance              FOREIGN KEY(StartTime, PerformanceDate, TheaterName)
+    REFERENCES      Performance(StartTime, PerformanceDate, TheaterName)
 );
 
 CREATE TABLE Customer
