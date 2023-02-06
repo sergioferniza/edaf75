@@ -30,11 +30,15 @@
 * Added CSV sample data files (used in DB setup)
 * Created this `README.md` file
 * Added the .drawio files with our UML diagrams
+
 2/6/23:
 * Continued updating DB schema and SQL script
+* Added SQL code to manually insert all entries into Performance table
+* Created a shared `lab2-answers.md` file for us to collaborate on lab question answers
 
 ### Sergio:
 asdf
+
 ### Tom
 2/6/23:
 * started bullet point answers for the questions from requirement 4 above
