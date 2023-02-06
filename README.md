@@ -8,6 +8,8 @@
 * Added CSV sample data files (used in DB setup)
 * Created this `README.md` file
 * Added the .drawio files with our UML diagrams
+2/6/23:
+* Continued updating DB schema and SQL script
 ### Sergio:
 asdf
 ### Tom

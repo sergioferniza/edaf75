@@ -9,7 +9,7 @@
 -- Consider changing table names to plural (as seen in lecture notes)
 
 -- Init
-PRAGMA foreign_keys=OFF;
+PRAGMA foreign_keys = OFF;
 
 DROP TABLE IF EXISTS Theater;
 DROP TABLE IF EXISTS Performance;
@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS Movie;
 DROP TABLE IF EXISTS Ticket;
 DROP TABLE IF EXISTS Customer;
 
-PRAGMA foreign_keys=ON;
+--PRAGMA foreign_keys = ON;
 
 -- Create tables
 CREATE TABLE Theater
@@ -40,8 +40,8 @@ CREATE TABLE Performance
 
     -- CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
     -- REFERENCES      Theater(TheaterName)
-    -- CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(MovieTitle)
-    -- REFERENCES      Movie(MovieTitle)
+    CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(MovieTitle)
+    REFERENCES      Movie(MovieTitle)
     -- CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
     -- REFERENCES      Ticket(TicketId)
 );
@@ -81,7 +81,7 @@ CREATE TABLE Customer
 );
 
 
--- ** Order of insertion
+-- ** Order of insertion: MIGHT NOT MATTER IF FOREIGN KEYS DISABLED
 -- 1. Customer
 -- 2. Theater
 -- 3. Movie
@@ -90,6 +90,8 @@ CREATE TABLE Customer
 
 
 -- Now insert test data from CSV using SQLite3 commands
+BEGIN TRANSACTION;
+
 .mode csv Customer
 .import SampleData_Customer.csv Customer
 
@@ -98,12 +100,12 @@ CREATE TABLE Customer
 
 -- .mode csv Performance
 -- .import SampleData_Performance.csv Performance
--- PRAGMA foreign_keys = off;
--- BEGIN TRANSACTION;
+
 INSERT OR   REPLACE
 INTO        Performance(StartTime, PerformanceDate, TheaterName, MovieTitle)
-VALUES      ("10:00","2022-12-10","Artcraft Theater","Avatar: The Way of Water")
--- END TRANSACTION;
--- PRAGMA foreign_keys = on;
+VALUES      ("10:00","2022-12-10","Artcraft Theater","Avatar: The Way of Water");
+
+END TRANSACTION;
+-- PRAGMA foreign_keys = ON;
 
 -- NOTE: Replace the import commands above with real INSERT commands later
