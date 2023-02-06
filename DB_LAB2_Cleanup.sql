@@ -65,7 +65,7 @@ CREATE TABLE Ticket
     TheaterName     VARCHAR(50) NOT NULL,
 
     CONSTRAINT      FK_Ticket_Costumer_Username FOREIGN KEY(Username)
-    REFERENCES      Costumer(Username)
+    REFERENCES      Customer(Username)
     -- Need to define foreign keys in tuples IF defined as tuples for primary key in another table
     CONSTRAINT      FK_Performance              FOREIGN KEY(StartTime, PerformanceDate, TheaterName)
     REFERENCES      Performance(StartTime, PerformanceDate, TheaterName)
@@ -92,11 +92,19 @@ CREATE TABLE Customer
 -- Now insert test data from CSV using SQLite3 commands
 BEGIN TRANSACTION;
 
+.mode csv Ticket
+.import SampleData_Ticket.csv Ticket
+
+.mode csv Theater
+.import SampleData_Theater.csv Theater
+
 .mode csv Customer
 .import SampleData_Customer.csv Customer
 
 .mode csv Movie
 .import SampleData_Movie.csv Movie
+
+
 
 -- .mode csv Performance
 -- .import SampleData_Performance.csv Performance
