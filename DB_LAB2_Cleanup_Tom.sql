@@ -46,8 +46,8 @@ CREATE TABLE Performance
     CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(IMDBKey)
     REFERENCES      Movie(IMDBKey)
    
-    CONSTRAINT      FK_Performance_Movie_MovieTitle    FOREIGN KEY(MovieTitle)
-    REFERENCES      Movie(MovieTitle)
+    CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
+    REFERENCES      Ticket(TicketId)
 );
 
 CREATE TABLE Movie
