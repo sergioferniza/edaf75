@@ -40,12 +40,14 @@ CREATE TABLE Performance
     CONSTRAINT      PK_DateTimeName             PRIMARY KEY(PerformanceId)
     -- ** NOTE: Constraints below will fail if there is no data in the other tables (referencing a NULL)
 
-    -- CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
-    -- REFERENCES      Theater(TheaterName)
+    CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
+    REFERENCES      Theater(TheaterName)
+
     CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(IMDBKey)
     REFERENCES      Movie(IMDBKey)
-    -- CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
-    -- REFERENCES      Ticket(TicketId)
+   
+    CONSTRAINT      FK_Performance_Movie_MovieTitle    FOREIGN KEY(MovieTitle)
+    REFERENCES      Movie(MovieTitle)
 );
 
 CREATE TABLE Movie
