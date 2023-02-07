@@ -27,12 +27,13 @@ CREATE TABLE Performance
     TicketId        TEXT DEFAULT (lower(hex(randomblob(16))))
 
     CONSTRAINT      PK_Performance_PerformanceId            PRIMARY KEY(PerformanceId)
-    -- ** NOTE: Constraints below will fail if there is no data in the other tables (referencing a NULL)
 
     CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
     REFERENCES      Theater(TheaterName)
+
     CONSTRAINT      FK_Performance_Movie_IMDBKey     FOREIGN KEY(IMDBKey)
     REFERENCES      Movie(IMDBKey)
+
     CONSTRAINT      FK_Performance_Movie_MovieTitle    FOREIGN KEY(MovieTitle)
     REFERENCES      Movie(MovieTitle)
 );
@@ -51,15 +52,11 @@ CREATE TABLE Ticket
 (
     TicketId        TEXT DEFAULT (lower(hex(randomblob(16)))),
     Username        VARCHAR(50) NOT NULL,
---    PerformanceId   INT,
 
     CONSTRAINT      PK_TicketId PRIMARY KEY(TicketId)
 
     CONSTRAINT      FK_Ticket_Costumer_Username FOREIGN KEY(Username)
     REFERENCES      Customer(Username)
-    -- Need to define foreign keys in tuples IF defined as tuples for primary key in another table
-    -- CONSTRAINT      FK_Performance              FOREIGN KEY(PerformanceId)
-    -- REFERENCES      Performance(PerformanceId)
 );
 
 CREATE TABLE Customer
@@ -95,25 +92,6 @@ BEGIN TRANSACTION;
 -- .mode csv Performance
 -- .import SampleData_Performance.csv Performance
 INSERT OR   REPLACE
-INTO        Ticket(Username, PerformanceId)
-VALUES      ("test123",1),
-            ("test123",2),
-            ("test123",3),
-            ("jacob1576",3),
-            ("jacob1576",3),
-            ("alice2002",4),
-            ("jacob1576",5),
-            ("brian22",19),
-            ("test123",12),
-            ("test123",13),
-            ("jacob1576",14),
-            ("jacob1576",17),
-            ("alice2002",15),
-            ("jacob1576",16),
-            ("brian22",18);
-
-
-INSERT OR   REPLACE
 INTO        Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, MovieTitle, IMDBKey)
 VALUES      (1,"10:00","2023-01-15","Artcraft Theater","Avatar: The Way of Water","tt1630029"),
             (2,"13:15","2023-01-01","Artcraft Theater","Forrest Gump","tt0109830"),
@@ -135,8 +113,26 @@ VALUES      (1,"10:00","2023-01-15","Artcraft Theater","Avatar: The Way of Water
             (18,"22:20","2022-11-06","Maximteatern","The Terminator","tt0088247"),
             (19,"13:30","2022-08-04","Draken","Mission Impossible - Fallout","tt4912910");
 
--- REWRITE TO ADD MANUALLY (so that default ticket UUIDs are used)
+-- Now fill in performance IDs
+INSERT OR   REPLACE
+INTO        Ticket(Username, PerformanceId)
+VALUES      ("test123",1),
+            ("test123",2),
+            ("test123",3),
+            ("jacob1576",3),
+            ("jacob1576",3),
+            ("alice2002",4),
+            ("jacob1576",5),
+            ("brian22",19),
+            ("test123",12),
+            ("test123",13),
+            ("jacob1576",14),
+            ("jacob1576",17),
+            ("alice2002",15),
+            ("jacob1576",16),
+            ("brian22",18);
 
+-- REWRITE TO ADD MANUALLY (so that default ticket UUIDs are used)
 
 END TRANSACTION;
 -- PRAGMA foreign_keys = ON;
