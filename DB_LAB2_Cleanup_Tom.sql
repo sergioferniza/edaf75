@@ -38,23 +38,16 @@ CREATE TABLE Performance
     IMDBKey         CHAR(9),
 
     CONSTRAINT      PK_DateTimeName             PRIMARY KEY(PerformanceId)
-    -- ** NOTE: Constraints below will fail if there is no data in the other tables (referencing a NULL)
 
-    CONSTRAINT      FK_Performance_Theater_TheaterName   FOREIGN KEY(TheaterName)
-    REFERENCES      Theater(TheaterName)
-
-    CONSTRAINT      FK_Performance_Movie_MovieTitle      FOREIGN KEY(IMDBKey)
+    CONSTRAINT      FK_Performance  FOREIGN KEY(IMDBKey)
     REFERENCES      Movie(IMDBKey)
-   
-    CONSTRAINT      FK_Performance_Ticket_TicketId       FOREIGN KEY(TicketId)
-    REFERENCES      Ticket(TicketId)
 );
 
 CREATE TABLE Movie
 (
-    IMDBKey         CHAR(9),
     MovieTitle      VARCHAR(50) NOT NULL,
     ProductionYear  INT,
+    IMDBKey         CHAR(9),
     RunningTime     INT,
 
     CONSTRAINT      PK_Movie_MovieTitle         PRIMARY KEY(IMDBKey)
@@ -68,11 +61,13 @@ CREATE TABLE Ticket
 
     CONSTRAINT      PK_TicketId PRIMARY KEY(TicketId)
 
+    CONSTRAINT      FK_Ticket_Costumer_Username FOREIGN KEY(PerformanceId)
+    REFERENCES      Performance(PerformanceId)
+
     CONSTRAINT      FK_Ticket_Costumer_Username FOREIGN KEY(Username)
     REFERENCES      Customer(Username)
     -- Need to define foreign keys in tuples IF defined as tuples for primary key in another table
-    CONSTRAINT      FK_Performance              FOREIGN KEY(PerformanceId)
-    REFERENCES      Performance(PerformanceId)
+
 );
 
 CREATE TABLE Customer
@@ -95,7 +90,6 @@ CREATE TABLE Customer
 
 -- Now insert test data from CSV using SQLite3 commands
 BEGIN TRANSACTION;
-
 .mode csv Customer
 .import SampleData_Customer.csv Customer
 
@@ -107,24 +101,6 @@ BEGIN TRANSACTION;
 
 -- .mode csv Performance
 -- .import SampleData_Performance.csv Performance
-INSERT OR   REPLACE
-INTO        Ticket(Username, PerformanceId)
-VALUES      ("test123",1),
-            ("test123",2),
-            ("test123",3),
-            ("jacob1576",3),
-            ("jacob1576",3),
-            ("alice2002",4),
-            ("jacob1576",5),
-            ("brian22",19),
-            ("test123",12),
-            ("test123",13),
-            ("jacob1576",14),
-            ("jacob1576",17),
-            ("alice2002",15),
-            ("jacob1576",16),
-            ("brian22",18);
-
 
 INSERT OR   REPLACE
 INTO        Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, MovieTitle, IMDBKey)
@@ -145,8 +121,30 @@ VALUES      (1,"10:00","2023-01-15","Artcraft Theater","Avatar: The Way of Water
             (15,"19:25","2023-02-04","Royal Cinema","Ponyo","tt0876563"),
             (16,"12:30","2049-01-01","Atlantic","Blade Runner 2049","tt1856101"),
             (17,"21:00","2022-11-06","Astoria","The Terminator","tt0088247"),
-            (18,"22:20","2022-11-06","Maximteatern","The Terminator","tt0088247"),
-            (19,"13:30","2022-08-04","Draken","Mission Impossible - Fallout","tt4912910");
+            (18,"22:20","2022-11-06","Maximteatern","The Terminator","tt0088247");
+
+
+INSERT OR   REPLACE
+INTO        Ticket(Username, PerformanceId)
+VALUES      ("test123",1),
+            ("test123",2),
+            ("test123",3),
+            ("jacob1576",4),
+            ("jacob1576",5),
+            ("alice2002",6),
+            ("jacob1576",7),
+            ("brian22",8),
+            ("test123",9),
+            ("test123",10),
+            ("jacob1576",11),
+            ("jacob1576",12),
+            ("alice2002",13),
+            ("jacob1576",14),
+            ("brian22",15),
+            ("brian22",16),
+            ("brian22",17),
+            ("brian22",18);
+
 
 -- REWRITE TO ADD MANUALLY (so that default ticket UUIDs are used)
 
