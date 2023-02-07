@@ -17,12 +17,12 @@ DROP TABLE IF EXISTS Movie;
 DROP TABLE IF EXISTS Ticket;
 DROP TABLE IF EXISTS Customer;
 
---PRAGMA foreign_keys = ON;
+PRAGMA foreign_keys = ON;
 
 -- Create tables
 CREATE TABLE Theater
 (
-    TheaterName     VARCHAR(50),
+    TheaterName     VARCHAR(50) NOT NULL,
     Capacity        INT,
 
     CONSTRAINT      PK_Theater_TheaterName      PRIMARY KEY(TheaterName)
@@ -48,7 +48,7 @@ CREATE TABLE Performance
 
 CREATE TABLE Movie
 (
-    MovieTitle      VARCHAR(50),
+    MovieTitle      VARCHAR(50) NOT NULL,
     ProductionYear  INT,
     IMDBKey         CHAR(9),
     RunningTime     INT,
@@ -92,19 +92,14 @@ CREATE TABLE Customer
 -- Now insert test data from CSV using SQLite3 commands
 BEGIN TRANSACTION;
 
-.mode csv Ticket
-.import SampleData_Ticket.csv Ticket
+.mode csv Customer
+.import SampleData_Customer.csv Customer
 
 .mode csv Theater
 .import SampleData_Theater.csv Theater
 
-.mode csv Customer
-.import SampleData_Customer.csv Customer
-
 .mode csv Movie
 .import SampleData_Movie.csv Movie
-
-
 
 -- .mode csv Performance
 -- .import SampleData_Performance.csv Performance
@@ -131,6 +126,9 @@ VALUES      ("10:00","2023-01-15","Artcraft Theater","Avatar: The Way of Water")
             ("22:20","2022-11-06","Maximteatern","The Terminator"),
             ("13:30","2022-08-04","Draken","Mission Impossible - Fallout");
 
+-- REWRITE TO ADD MANUALLY (so that default ticket UUIDs are used)
+.mode csv Ticket
+.import SampleData_Ticket.csv Ticket
 
 END TRANSACTION;
 -- PRAGMA foreign_keys = ON;
