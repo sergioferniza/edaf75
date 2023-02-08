@@ -36,7 +36,6 @@ CREATE TABLE Performance
     StartTime       TIME,
     PerformanceDate DATE,
     TheaterName     VARCHAR(50) NOT NULL,
-    MovieTitle      VARCHAR(50) NOT NULL,
     IMDBKey         CHAR(9),
 
     CONSTRAINT      PK_DateTimeName                     PRIMARY KEY(PerformanceId)
@@ -106,26 +105,26 @@ BEGIN TRANSACTION;
 -- .mode csv Performance
 -- .import SampleData_Performance.csv Performance
 INSERT OR   REPLACE
-INTO        Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, MovieTitle, IMDBKey)
-VALUES      (1,"10:00","2023-01-15","Artcraft Theater","Avatar: The Way of Water","tt1630029"),
-            (2,"13:15","2023-01-01","Artcraft Theater","Forrest Gump","tt0109830"),
-            (3,"17:00","2023-01-23","Artcraft Theater","Forrest Gump","tt0109830"),
-            (4,"21:20","2023-01-11","Booth Theater","Silence of the Lambs","tt0102926"),
-            (5,"19:10","2022-10-06","Capitol Theater","The Dark Night","tt0468569"),
-            (6,"22:45","2022-10-06","Capitol Theater","The Dark Night","tt0468569"),
-            (7,"19:35","2022-12-16","Cliff Theater","The Dark Night","tt0468569"),
-            (8,"14:00","2022-12-17","Los Angeles Theater","The Breakfast Club","tt0088847"),
-            (9,"18:30","2022-12-18","Los Angeles Theater","The Breakfast Club","tt0088847"),
-            (10,"18:15","2022-12-19","Paramount Theater","Top Gun","tt0092099"),
-            (11,"21:20","2022-12-19","Paramount Theater","Top Gun","tt0092099"),
-            (12,"18:15","2022-12-19","Tower Theater","Top Gun","tt0092099"),
-            (13,"23:00","2023-02-01","Vista Theater","Top Gun","tt0092099"),
-            (14,"09:20","2023-02-04","Garneau Theater","Ponyo","tt0876563"),
-            (15,"19:25","2023-02-04","Royal Cinema","Ponyo","tt0876563"),
-            (16,"12:30","2049-01-01[","Atlantic","Blade Runner 2049","tt1856101"),
-            (17,"21:00","2022-11-06","Astoria","The Terminator","tt0088247"),
-            (18,"22:20","2022-11-06","Maximteatern","The Terminator","tt0088247"),
-            (19,"13:30","2022-08-04","Draken","Mission Impossible - Fallout","tt4912910");
+INTO        Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
+VALUES      (1,"10:00","2023-01-15","Artcraft Theater","tt1630029"),
+            (2,"13:15","2023-01-01","Artcraft Theater","tt0109830"),
+            (3,"17:00","2023-01-23","Artcraft Theater","tt0109830"),
+            (4,"21:20","2023-01-11","Booth Theater","tt0102926"),
+            (5,"19:10","2022-10-06","Capitol Theater","tt0468569"),
+            (6,"22:45","2022-10-06","Capitol Theater","tt0468569"),
+            (7,"19:35","2022-12-16","Cliff Theater","tt0468569"),
+            (8,"14:00","2022-12-17","Los Angeles Theater","tt0088847"),
+            (9,"18:30","2022-12-18","Los Angeles Theater","tt0088847"),
+            (10,"18:15","2022-12-19","Paramount Theater","tt0092099"),
+            (11,"21:20","2022-12-19","Paramount Theater","tt0092099"),
+            (12,"18:15","2022-12-19","Tower Theater","tt0092099"),
+            (13,"23:00","2023-02-01","Vista Theater","tt0092099"),
+            (14,"09:20","2023-02-04","Garneau Theater","tt0876563"),
+            (15,"19:25","2023-02-04","Royal Cinema","tt0876563"),
+            (16,"12:30","2049-01-01[","Atlantic","tt1856101"),
+            (17,"21:00","2022-11-06","Astoria","tt0088247"),
+            (18,"22:20","2022-11-06","Maximteatern","tt0088247"),
+            (19,"13:30","2022-08-04","Draken","tt4912910");
 
 -- Now fill in performance IDs
 INSERT OR   REPLACE
