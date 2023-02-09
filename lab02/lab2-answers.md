@@ -55,13 +55,13 @@ Note that bolded attributes denote primary keys and foreign keys are excluded.
 * Movie title is a natural key (given the 1 year unique name assumption in the spec)
 
 ### (b) Is there a risk that any of the natural keys will ever change?
-* asdf
+* Yes there is a risk as Username, theatre and movie title may need be changed because of exterior needs and if that happens it would be necessary to update uproprietly the DB to prevent any issues.
 
 ### (c) Are there any weak entity sets?
-* asdf
+* No all entities in all our tables have unique primary attributes that are used to identify them individually.
 
 ### (d) In which relations do you want to use an invented key. Why?
-* Ticket and performance?
+* An inverted key can be used for performance where you can use a given time and date as well as a movie theater and the movie being shown to identify a specific performance. This is because their date and time attributes are not unique so you could have multiple inputs with those values.
 
 ## Question 5:
 ### UML Diagram
@@ -71,5 +71,15 @@ Note that bolded attributes denote primary keys and foreign keys are excluded.
 
 ## Question 6: 
 There are at least two ways of keeping track of the number of seats available for each performance – describe them both, with their upsides and downsides.
-* Method 1:
+
+* Method 1: 
+
+You could filter out the tickets table to those with a specific performance id which we could then use the count function to return the number of of tickets for a given performance have been sold and from there you could subtract the number by the total capacity.
+
+The upside is that its an easy method to obtain the exact number of ticket that are currently sold, however it does come with the issue that you have to call it each time you want to keep track of this information.
+
 * Method 2:
+
+Another method could be adding a counter to the ticket table which gives the ticket a number of order in which it was sold such that it would count all new ticket instances that would have the performance id. 
+
+This would be beneficial in that it could allow you to see the number of tickets sold, however it could have issues in that if any ticket is refunded it could not be accuratly displayed in the table.
