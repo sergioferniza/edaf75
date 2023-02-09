@@ -89,6 +89,20 @@ CREATE TABLE Customer
 -- 4. Performance
 -- 5. Ticket
 
+-- CONSTRAINT ON THE NUMBER OF TICKET INSTANCES BASED ON CAPACITY
+
+CREATE TRIGGER Capacity_Reached
+AFTER INSERT ON Ticket
+FOR EACH ROW
+
+BEGIN
+    SELECT CASE
+        WHEN (SELECT COUNT(*) FROM Ticket WHERE PerformanceId = NEW.PerformanceId) > (SELECT Capacity FROM Theater WHERE TheaterName = (SELECT TheaterName FROM Performance WHERE PerformanceId = NEW.PerformanceId))
+        THEN RAISE(ABORT, 'I am sorry we have run out of tickets')
+    END;
+END;
+
+
 
 -- Now insert test data from CSV using SQLite3 commands
 BEGIN TRANSACTION;
