@@ -47,13 +47,6 @@ Note that bolded attributes denote primary keys and foreign keys are excluded.
 |-------------------------------|
 | **TicketID:** randomblob(16)  |
 
-
-## Full E/R Model
-### UML Diagram
-![uml_diagram](Lab2_ER_Model.PNG)
-### UML Diagram w/ Foreign Keys
-![uml_diagram_w_foreign_keys](Lab2_ER_Model_w_Foreign_Keys.PNG)
-
 ## Question 4:
 ### (a) Which relations have natural keys?
 * Ticket_id is a natural key
@@ -71,6 +64,10 @@ Note that bolded attributes denote primary keys and foreign keys are excluded.
 * Ticket and performance?
 
 ## Question 5:
+### UML Diagram
+![uml_diagram](Lab2_ER_Model.PNG)
+### UML Diagram w/ Foreign Keys (just for reference)
+![uml_diagram_w_foreign_keys](Lab2_ER_Model_w_Foreign_Keys.PNG)
 
 ## Question 6: 
 There are at least two ways of keeping track of the number of seats available for each performance – describe them both, with their upsides and downsides.
