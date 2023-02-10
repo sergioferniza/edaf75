@@ -48,17 +48,19 @@ Note that bolded attributes denote primary keys and foreign keys are excluded.
 | **TicketID:** randomblob(16)  |
 
 ## Question 4:
+The primary keys have already been identified above. The foreign keys can be
+found in the 2nd image below in Question 5 (colored in red).
 ### (a) Which relations have natural keys?
 * Ticket_id is a natural key
 * Username is a natural key
 * Theatre name is also a natural key given that the spec says that each name is unique
-* Movie title is a natural key (given the 1 year unique name assumption in the spec)
+* Movie title is a natural key given the 1 year unique name assumption in the spec
 
 ### (b) Is there a risk that any of the natural keys will ever change?
 * Yes there is a risk as Username, theatre and movie title may need be changed because of exterior needs and if that happens it would be necessary to update uproprietly the DB to prevent any issues.
 
 ### (c) Are there any weak entity sets?
-* No all entities in all our tables have unique primary attributes that are used to identify them individually.
+* **No**, all entities in all our tables have unique primary attributes that are used to identify them individually.
 
 ### (d) In which relations do you want to use an invented key. Why?
 * An inverted key can be used for performance where you can use a given time and date as well as a movie theater and the movie being shown to identify a specific performance. This is because their date and time attributes are not unique so you could have multiple inputs with those values.
@@ -83,3 +85,9 @@ The upside is that its an easy method to obtain the exact number of ticket that 
 Another method could be adding a counter to the ticket table which gives the ticket a number of order in which it was sold such that it would count all new ticket instances that would have the performance id. 
 
 This would be beneficial in that it could allow you to see the number of tickets sold, however it could have issues in that if any ticket is refunded it could not be accuratly displayed in the table.
+
+## Question 7:
+(See `DB_LAB2_Cleanup.sql` file)
+
+## Question 8:
+NOTE: We chose the name `theaters.sqlite` for our database
