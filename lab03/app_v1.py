@@ -47,6 +47,7 @@ def add_customer():
     """
     Add a user to the Customer table (if they don't already exist)
     TODO: Tom
+    God is Good 
 
     Raise errors if this happens
     """
