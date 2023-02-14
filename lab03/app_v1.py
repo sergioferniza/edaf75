@@ -84,8 +84,9 @@ def get_specific_movie(imdb_key):
     TO DO SERGIO
     Get a specific movie from the Movie table based on the IMDB key
     """
-    specific_movie_data = request.json
-    pass
+    """specific_movie_data = request.json"""
+    request.status = 100
+    return "Bazinga"
 
 @post('/performances')
 def add_performance():
@@ -95,8 +96,9 @@ def add_performance():
 
     Raise errors if this happens
     """
-    performance_data = request.json
-    pass
+    """performance_data = request.json"""
+    request.status = 100
+    return "Dong"
 
 @get('/performances')
 def get_performances():
@@ -104,8 +106,9 @@ def get_performances():
     TO DO SERGIO
     Get all performances from the Performance table
     """
-    performance_data = request.json
-    pass
+    """performance_data = request.json"""
+    request.status = 100
+    return "Ding"
 
 @post('/tickets')
 def add_ticket():
