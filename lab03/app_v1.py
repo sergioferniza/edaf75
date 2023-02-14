@@ -40,7 +40,33 @@ def reset_db():
 
     Should we do this using transactions??
     """
-    pass
+
+    # Delete all entries in table (BUT not the table itself)
+    c = db.cursor()
+    c.execute("DELETE FROM Theater")
+    c.execute("DELETE FROM Performance")
+    c.execute("DELETE FROM Movie")
+    c.execute("DELETE FROM Ticket")
+    c.execute("DELETE FROM Customer")
+
+    # Populate the Theater table with dummy data
+    c.execute("""INSERT OR   REPLACE
+                 INTO        Theater(TheaterName, Capacity)
+                 VALUES      ("Kino",10),
+                             ("Regal", 16),
+                             ("Skandia", 100)
+                 RETURNING   TheaterName;
+              """)
+
+    # Check if insertions ran correctly
+    found = c.fetchone()
+    if not found:
+        response.status = 400
+        return "Theater insertion during reset failed"
+    else:
+        db.commit()
+        response.status = 200
+        return "Theater database has been successfully reset!"
 
 @post('/users')
 def add_customer():
@@ -92,6 +118,8 @@ def get_movies():
 
     Returned in JSON format
     """
+
+    movie_data = request.json
     pass
 
 @get('/movies/<imdb_key>')
@@ -100,7 +128,9 @@ def get_specific_movie(imdb_key):
     TO DO SERGIO
     Get a specific movie from the Movie table based on the IMDB key
     """
-    pass
+    """specific_movie_data = request.json"""
+    request.status = 100
+    return "Bazinga"
 
 @post('/performances')
 def add_performance():
@@ -110,8 +140,9 @@ def add_performance():
 
     Raise errors if this happens
     """
-    performance_data = request.json
-    pass
+    """performance_data = request.json"""
+    request.status = 100
+    return "Dong"
 
 @get('/performances')
 def get_performances():
@@ -119,7 +150,9 @@ def get_performances():
     TO DO SERGIO
     Get all performances from the Performance table
     """
-    pass
+    """performance_data = request.json"""
+    request.status = 100
+    return "Ding"
 
 @post('/tickets')
 def add_ticket():
