@@ -110,6 +110,7 @@ def add_ticket():
     TODO: Jacob
     """
     string = "made a change"
+    string2 = "made a second change"
     return string
 
 @get('/users/<username>/tickets')
