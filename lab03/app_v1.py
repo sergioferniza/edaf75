@@ -78,6 +78,7 @@ def get_movies():
 @get('/movies/<imdb_key>')
 def get_specific_movie(imdb_key):
     """
+    TO DO SERGIO
     Get a specific movie from the Movie table based on the IMDB key
     """
     pass
@@ -85,6 +86,7 @@ def get_specific_movie(imdb_key):
 @post('/performances')
 def add_performance():
     """
+    TO DO SERGIO
     Add a performance to the Performance table
 
     Raise errors if this happens
@@ -95,6 +97,7 @@ def add_performance():
 @get('/performances')
 def get_performances():
     """
+    TO DO SERGIO
     Get all performances from the Performance table
     """
     pass
