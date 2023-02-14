@@ -79,12 +79,30 @@ def add_customer():
     """
     Add a user to the Customer table (if they don't already exist)
     TODO: Tom
-    God is Good 
+    God is Good
 
     Raise errors if this happens
     """
     customer_data = request.json
-    pass
+    c = db.cursor()
+    c.execute(
+        """
+        INSERT
+        INTO       Customer(Username, CustomerName, UserPassword)
+        VALUES     (?, ?, ?)
+        RETURNING Username
+        """,
+        [customer_data['username'], customer_data['fullName'], customer_data['pwd']]
+    )
+    found = c.fetchone()
+    if not found:
+        response.status = 400
+        return "Illegal..."
+    else:
+        db.commit()
+        response.status = 201
+        u_id, = found
+        return f"http://localhost:{PORT}/{u_id}"
 
 @post('/movies')
 def add_movie():
