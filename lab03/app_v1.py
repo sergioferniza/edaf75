@@ -13,12 +13,13 @@ from urllib.parse import unquote
 
 # Print SQLite3 version
 ver = sqlite3.sqlite_version_info
-print("Using SQLite Version {}.{}.{}".format(ver[0], ver[1], ver[2]))
+print("Using SQLite Version {}.{}.{}\n".format(ver[0], ver[1], ver[2]))
 
 # Configure connection information
 PORT    = 7007
 HOST    = "localhost"
 db      = sqlite3.connect("theaters.sqlite")
+#db      = sqlite3.connect("theaters.sqlite", isolation_level="IMMEDIATE")
 
 ####### Main REST server functions ########
 @get('/ping')
@@ -30,7 +31,7 @@ def get_ping_pong():
     request.status = 200
 
     # Return pong string
-    return "pong"
+    return "pong\n"
 
 @post('/reset')
 def reset_db():
@@ -41,32 +42,37 @@ def reset_db():
     Should we do this using transactions??
     """
 
-    # Delete all entries in table (BUT not the table itself)
+    # Delete all entries in table (BUT not the table itself), all in one transaction
     c = db.cursor()
     c.execute("DELETE FROM Theater")
     c.execute("DELETE FROM Performance")
     c.execute("DELETE FROM Movie")
     c.execute("DELETE FROM Ticket")
     c.execute("DELETE FROM Customer")
+    db.commit()
 
-    # Populate the Theater table with dummy data
-    c.execute("""INSERT OR   REPLACE
+    print("Deleted all tables!")
+
+    # Populate the Theater table with dummy data, in another transaction
+    c = db.cursor()
+    c.execute("""INSERT
                  INTO        Theater(TheaterName, Capacity)
                  VALUES      ("Kino",10),
-                             ("Regal", 16),
-                             ("Skandia", 100)
+                             ("Regal",16),
+                             ("Skandia",100)
                  RETURNING   TheaterName;
               """)
-
+    
     # Check if insertions ran correctly
-    found = c.fetchone()
+    found = c.fetchall()            # MAKE SURE TO USE FETCHALL, otherwise you will get a 500 error
+    #print(found)
     if not found:
         response.status = 400
-        return "Theater insertion during reset failed"
+        return "Theater insertion during reset failed\n"
     else:
         db.commit()
         response.status = 200
-        return "Theater database has been successfully reset!"
+        return "Theater database has been successfully reset!\n"
 
 @post('/users')
 def add_customer():
