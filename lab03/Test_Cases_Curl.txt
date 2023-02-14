@@ -1,0 +1,11 @@
+http://localhost:7007/ping
+
+PRAGMA foreign_keys = OFF;
+
+DROP TABLE IF EXISTS Theater;
+DROP TABLE IF EXISTS Performance;
+DROP TABLE IF EXISTS Movie;
+DROP TABLE IF EXISTS Ticket;
+DROP TABLE IF EXISTS Customer;
+
+PRAGMA foreign_keys = ON;

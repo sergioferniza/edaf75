@@ -40,7 +40,33 @@ def reset_db():
 
     Should we do this using transactions??
     """
-    pass
+
+    # Delete all entries in table (BUT not the table itself)
+    c = db.cursor()
+    c.execute("DELETE FROM Theater")
+    c.execute("DELETE FROM Performance")
+    c.execute("DELETE FROM Movie")
+    c.execute("DELETE FROM Ticket")
+    c.execute("DELETE FROM Customer")
+
+    # Populate the Theater table with dummy data
+    c.execute("""INSERT OR   REPLACE
+                 INTO        Theater(TheaterName, Capacity)
+                 VALUES      ("Kino",10),
+                             ("Regal", 16),
+                             ("Skandia", 100)
+                 RETURNING   TheaterName;
+              """)
+
+    # Check if insertions ran correctly
+    found = c.fetchone()
+    if not found:
+        response.status = 400
+        return "Theater insertion during reset failed"
+    else:
+        db.commit()
+        response.status = 200
+        return "Theater database has been successfully reset!"
 
 @post('/users')
 def add_customer():
