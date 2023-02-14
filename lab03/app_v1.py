@@ -106,15 +106,21 @@ def get_performances():
 def add_ticket():
     """
     Add a ticket to the Ticket table
+
+    TODO: Jacob
     """
-    pass
+    string = "made a change"
+    return string
 
 @get('/users/<username>/tickets')
 def get_users_ticket():
     """
     Get all ticket information for a specific user
+
+    TODO: Jacob
     """
-    pass
+    string = "made a change"
+    return string
 
 
 ##### Start running REST server #####
