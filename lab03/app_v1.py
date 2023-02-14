@@ -46,6 +46,7 @@ def reset_db():
 def add_customer():
     """
     Add a user to the Customer table (if they don't already exist)
+    TODO: Tom
 
     Raise errors if this happens
     """
@@ -56,6 +57,7 @@ def add_customer():
 def add_movie():
     """
     Add a movie to the Movie table
+    TODO: Tom
 
     Raise errors if this happens
     """
@@ -67,6 +69,7 @@ def get_movies():
     """
     Get all movies from the Movie table
     Make sure to edit query based on query strings (e.g. ?name=asdf)
+    TODO: Tom
 
     Returned in JSON format
     """
