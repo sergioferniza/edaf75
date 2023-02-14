@@ -47,6 +47,7 @@ def add_customer():
     """
     Add a user to the Customer table (if they don't already exist)
     TODO: Tom
+    God is Good 
 
     Raise errors if this happens
     """
@@ -114,6 +115,7 @@ def add_ticket():
     TODO: Jacob
     """
     string = "made a change"
+    string2 = "made a second change"
     return string
 
 @get('/users/<username>/tickets')
