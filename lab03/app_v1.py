@@ -73,6 +73,8 @@ def get_movies():
 
     Returned in JSON format
     """
+
+    movie_data = request.json
     pass
 
 @get('/movies/<imdb_key>')
@@ -81,6 +83,7 @@ def get_specific_movie(imdb_key):
     TO DO SERGIO
     Get a specific movie from the Movie table based on the IMDB key
     """
+    specific_movie_data = request.json
     pass
 
 @post('/performances')
@@ -100,6 +103,7 @@ def get_performances():
     TO DO SERGIO
     Get all performances from the Performance table
     """
+    performance_data = request.json
     pass
 
 @post('/tickets')
