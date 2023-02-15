@@ -11,7 +11,7 @@ from json import dumps
 import sqlite3
 from tabulate import tabulate
 from urllib.parse import unquote
-import hashlib
+from hashlib import sha256
 
 # Print SQLite3 version
 ver = sqlite3.sqlite_version_info
@@ -172,7 +172,25 @@ def add_ticket():
     # Get ticket JSON from request
     ticket = request.json
 
-    # Define query and execute
+    # Check username and password
+    # Extract these fields from JSON
+    username = ticket['username']
+    password_hashed = hash(ticket['pwd'])
+    # Perform a query to get the correct password
+    c = db.cursor()
+    c.execute("""
+              SELECT UserPassword
+              FROM Customer
+              WHERE username=?
+              """, 
+              [username])
+    true_password_hashed = hash(c.fetchone()[0])
+    # Check if password is correct
+    if (password_hashed != true_password_hashed):
+        response.status = 401
+        return "Wrong user credentials\n"
+
+    # Now try to add ticket
     try:
         c = db.cursor()
         c.execute(
@@ -184,22 +202,18 @@ def add_ticket():
             """,
             [ticket['username'], ticket['PerformanceId']]
         )
+
+        ticket_id = c.fetchone()[0]
+        if not ticket_id:
+            response.status = 400
+            return "Error\n"
+        else:
+            db.commit()
+            response.status = 200
+            return f"/tickets/{ticket_id}\n"
     except sqlite3.IntegrityError:
         response.status = 400
         return "No tickets left\n"
-
-
-    # Check if insertions ran correctly
-    # ** TODO: Add error checking to see if a ticket can even be bought
-
-    ticket_id = c.fetchone()
-    if not ticket_id:
-        response.status = 400
-        return "Error\n"
-    else:
-        db.commit()
-        response.status = 200
-        return f"/tickets/{ticket_id}\n"
 
 @get('/users/<username>/tickets')
 def get_users_ticket(username):
@@ -244,6 +258,8 @@ def get_users_ticket(username):
     # Return query results using dumps() for pretty printing
     return dumps({"data": results}, indent=4)
 
+def hash(msg):
+    return sha256(msg.encode('utf-8')).hexdigest()
 
 ##### Start running REST server #####
 run(host=HOST, port=PORT)
