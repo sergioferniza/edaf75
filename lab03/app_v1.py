@@ -7,9 +7,11 @@
 
 # Import packages
 from bottle import get, post, run, request, response
+from json import dumps
 import sqlite3
 from tabulate import tabulate
 from urllib.parse import unquote
+import hashlib
 
 # Print SQLite3 version
 ver = sqlite3.sqlite_version_info
@@ -54,7 +56,7 @@ def reset_db():
     print("Deleted all tables!")
 
     # Populate the Theater table with dummy data, in another transaction
-    c = db.cursor()
+    #c = db.cursor()
     c.execute("""INSERT
                  INTO        Theater(TheaterName, Capacity)
                  VALUES      ("Kino",10),
@@ -68,7 +70,7 @@ def reset_db():
     #print(found)
     if not found:
         response.status = 400
-        return "Theater insertion during reset failed\n"
+        return "Theater insertion during reset failed!\n"
     else:
         db.commit()
         response.status = 200
@@ -167,19 +169,75 @@ def add_ticket():
 
     TODO: Jacob
     """
-    string = "made a change"
-    string2 = "made a second change"
-    return string
+    # Get ticket JSON from request
+    ticket = request.json
+
+    # Define query and execute
+    c = db.cursor()
+    c.execute(
+        """
+        INSERT
+        INTO       Ticket(Username, PerformanceId)
+        VALUES     (?, ?)
+        RETURNING  TicketId
+        """,
+        [ticket['username'], ticket['PerformanceId']]
+    )
+
+    # Check if insertions ran correctly
+    # ** TODO: Add error checking to see if a ticket can even be bought
+
+    ticket_id = c.fetchone()
+    if not ticket_id:
+        response.status = 400
+        return "Error\n"
+    else:
+        db.commit()
+        response.status = 200
+        return f"/tickets/{ticket_id}\n"
 
 @get('/users/<username>/tickets')
-def get_users_ticket():
+def get_users_ticket(username):
     """
     Get all ticket information for a specific user
 
     TODO: Jacob
     """
-    string = "made a change"
-    return string
+    # Get ticket JSON from request
+
+    # Define query and execute
+    c = db.cursor()
+    c.execute(
+        """
+        SELECT      PerformanceDate, StartTime, TheaterName, MovieTitle, ProductionYear, count() as nbrOfTickets
+        FROM        Ticket
+        LEFT JOIN   Customer
+        USING       (username)
+        LEFT JOIN   Performance
+        USING       (PerformanceId)
+        LEFT JOIN   Movie
+        USING       (IMDBKey)
+        WHERE       username=?
+        GROUP BY    PerformanceId
+        """,
+        [username]
+    )
+
+    # Add fields to query
+    results = [{"date": date,
+               "startTime": startTime,
+               "theater": theater,
+               "title": title,
+               "year": year,
+               "nbrOfTickets": nbrOfTickets}
+               for date, startTime, theater, title, year, nbrOfTickets in c
+              ]
+
+    # Set status
+    response.status = 200
+
+    # Return query results using dumps() for pretty printing
+    return dumps({"data": results}, indent=4)
 
 
 ##### Start running REST server #####
