@@ -173,16 +173,21 @@ def add_ticket():
     ticket = request.json
 
     # Define query and execute
-    c = db.cursor()
-    c.execute(
-        """
-        INSERT
-        INTO       Ticket(Username, PerformanceId)
-        VALUES     (?, ?)
-        RETURNING  TicketId
-        """,
-        [ticket['username'], ticket['PerformanceId']]
-    )
+    try:
+        c = db.cursor()
+        c.execute(
+            """
+            INSERT
+            INTO       Ticket(Username, PerformanceId)
+            VALUES     (?, ?)
+            RETURNING  TicketId
+            """,
+            [ticket['username'], ticket['PerformanceId']]
+        )
+    except sqlite3.IntegrityError:
+        response.status = 400
+        return "No tickets left\n"
+
 
     # Check if insertions ran correctly
     # ** TODO: Add error checking to see if a ticket can even be bought

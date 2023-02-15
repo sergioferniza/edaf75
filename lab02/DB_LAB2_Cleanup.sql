@@ -90,16 +90,12 @@ CREATE TABLE Customer
 -- 5. Ticket
 
 -- CONSTRAINT ON THE NUMBER OF TICKET INSTANCES BASED ON CAPACITY
-
+DROP TRIGGER IF EXISTS Capacity_Reached;
 CREATE TRIGGER Capacity_Reached
 AFTER INSERT ON Ticket
-FOR EACH ROW
-
+WHEN (SELECT COUNT() FROM Ticket WHERE PerformanceId = NEW.PerformanceId) > (SELECT Capacity FROM Theater WHERE TheaterName = (SELECT TheaterName FROM Performance WHERE PerformanceId = NEW.PerformanceId))
 BEGIN
-    SELECT CASE
-        WHEN (SELECT COUNT(*) FROM Ticket WHERE PerformanceId = NEW.PerformanceId) > (SELECT Capacity FROM Theater WHERE TheaterName = (SELECT TheaterName FROM Performance WHERE PerformanceId = NEW.PerformanceId))
-        THEN RAISE(ABORT, 'I am sorry we have run out of tickets')
-    END;
+    SELECT RAISE(ROLLBaCK, 'I am sorry we have run out of tickets');
 END;
 
 
