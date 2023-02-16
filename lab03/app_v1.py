@@ -137,7 +137,7 @@ def get_specific_movie(imdb_key):
     c = db.cursor()
     c.execute("""
     
-    SELECT MovieTitle, ProductionYear, RunningTime
+    SELECT MovieTitle, ProductionYear, IMDBKey
     FROM MOVIE
     WHERE IMDBKEY = ?
     
