@@ -165,13 +165,8 @@ def get_specific_movie(imdb_key):
     ### RETURN A SPECIFIC MOVIE BASED ON A GIVEN IMDB KEY ###
     c = db.cursor()
     c.execute("""
-<<<<<<< HEAD
-
-    SELECT MovieTitle, ProductionYear, IMDBKey
-=======
     
     SELECT IMDBKey, MovieTitle, ProductionYear
->>>>>>> 38713a0af232929e06c81ed6391511f1c1f00d6c
     FROM MOVIE
     WHERE IMDBKEY = ?
 
@@ -180,16 +175,6 @@ def get_specific_movie(imdb_key):
 
     ### OBTAIN RESULTS AND PUT THEM IN A DICTIONARY ###
     result = c.fetchone()
-<<<<<<< HEAD
-    movie_dict = {
-
-        "MovieTitle": result[0],
-        "ProductionYear": result[1],
-        "IMDBKey": result[2]
-
-    }
-
-=======
     if result:
         movie_dict = [
             {
@@ -202,7 +187,6 @@ def get_specific_movie(imdb_key):
         ]
     else:
         movie_dict = []
->>>>>>> 38713a0af232929e06c81ed6391511f1c1f00d6c
     request.status = 200
 
     ### RETURN OUR DESIRED RESULT ###
@@ -252,12 +236,6 @@ def get_performances():
     result = c.fetchall()
     performance_list = [
         {
-<<<<<<< HEAD
-            "IMDBKey": row[0],
-            "TheaterName": row[1],
-            "PerformanceDate": row[2],
-            "StartTime": row[3]
-=======
             "performanceId": row[0],
             "date": row[1],
             "startTime": row[2],
@@ -265,7 +243,6 @@ def get_performances():
             "year": row[4]
             "theater": row[5]
             ###"remainingSeats": row[6]
->>>>>>> 38713a0af232929e06c81ed6391511f1c1f00d6c
         }
 
         for row in result
