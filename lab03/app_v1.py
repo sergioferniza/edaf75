@@ -129,7 +129,7 @@ def add_movie():
             VALUES     (?, ?, ?, ?)
             RETURNING IMDBKey
             """,
-            [movie_data['imdbKey'], movie_data['title'], movie_data['year'], 4]
+            [movie_data['imdbKey'], movie_data['title'], movie_data['year'], 40]
         )
 
         imdbKey = c.fetchone()[0]
@@ -167,11 +167,11 @@ def get_movies():
         params.append(unquote(request.query.title))
     if request.query.year:
         query += " AND ProductionYear - ?"
-        params.append(equest.query.year)
+        params.append(unquote(equest.query.year))
     c = db.cursor()
     c.execute(query, params)
     found = [{"imdbKey": IMDBKey, "title": MovieTitle, "year": ProductionYear}
-             for IMDBKey, MovieTitle,ProductionYear in c]
+             for IMDBKey, MovieTitle, ProductionYear in c]
     response.status = 200
     return {"data": found}
 
@@ -214,8 +214,8 @@ def add_performance():
     ### ADD TO THE DB A NEW PERFORMANCE ENTRY WITH ALL NECESSARY DATA ###
     performance = request.json
 
-    ### FIRST FIGURE OUT HOW MANY PERFORMANCES THERE ARE 
-    # That way, use the next consecutive performance id (INT) 
+    ### FIRST FIGURE OUT HOW MANY PERFORMANCES THERE ARE
+    # That way, use the next consecutive performance id (INT)
     c = db.cursor()
     c.execute("""SELECT count() FROM Performance""")
     n_perfomances = c.fetchone()[0]
