@@ -38,6 +38,7 @@ CREATE TABLE Performance
     PerformanceDate DATE,
     TheaterName     VARCHAR(50) NOT NULL,
     IMDBKey         CHAR(9),
+    RemainingSeats  INT,
 
     CONSTRAINT      PK_DateTimeName                     PRIMARY KEY(PerformanceId)
 
@@ -93,10 +94,20 @@ CREATE TABLE Customer
 -- CONSTRAINT ON THE NUMBER OF TICKET INSTANCES BASED ON CAPACITY
 DROP TRIGGER IF EXISTS Capacity_Reached;
 CREATE TRIGGER Capacity_Reached
-AFTER INSERT ON Ticket
-WHEN (SELECT COUNT() FROM Ticket WHERE PerformanceId = NEW.PerformanceId) > (SELECT Capacity FROM Theater WHERE TheaterName = (SELECT TheaterName FROM Performance WHERE PerformanceId = NEW.PerformanceId))
+BEFORE INSERT ON Ticket
+WHEN (SELECT RemainingSeats FROM Performance WHERE PerformanceId = NEW.PerformanceId) <= 0
 BEGIN
-    SELECT RAISE(ROLLBaCK, 'I am sorry we have run out of tickets');
+    SELECT RAISE(ROLLBACK, 'I am sorry we have run out of tickets');
+END;
+
+-- TRIGGER FOR DECREMENTING REMAINING SEATS FOR A PERFORMANCE
+DROP TRIGGER IF EXISTS Decrement_Remaining_Seats;
+CREATE TRIGGER Decrement_Remaining_Seats
+AFTER INSERT ON Ticket
+BEGIN
+    UPDATE Performance
+    SET    RemainingSeats = RemainingSeats - 1
+    WHERE  PerformanceId = NEW.PerformanceId; 
 END;
 
 -- Now insert test data from CSV using SQLite3 commands
@@ -111,29 +122,37 @@ BEGIN TRANSACTION;
 .mode csv Movie
 .import SampleData_Movie.csv Movie
 
--- .mode csv Performance
--- .import SampleData_Performance.csv Performance
-INSERT OR   REPLACE
-INTO        Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
-VALUES      (1,"10:00","2023-01-15","Artcraft Theater","tt1630029"),
-            (2,"13:15","2023-01-01","Artcraft Theater","tt0109830"),
-            (3,"17:00","2023-01-23","Artcraft Theater","tt0109830"),
-            (4,"21:20","2023-01-11","Booth Theater","tt0102926"),
-            (5,"19:10","2022-10-06","Capitol Theater","tt0468569"),
-            (6,"22:45","2022-10-06","Capitol Theater","tt0468569"),
-            (7,"19:35","2022-12-16","Cliff Theater","tt0468569"),
-            (8,"14:00","2022-12-17","Los Angeles Theater","tt0088847"),
-            (9,"18:30","2022-12-18","Los Angeles Theater","tt0088847"),
-            (10,"18:15","2022-12-19","Paramount Theater","tt0092099"),
-            (11,"21:20","2022-12-19","Paramount Theater","tt0092099"),
-            (12,"18:15","2022-12-19","Tower Theater","tt0092099"),
-            (13,"23:00","2023-02-01","Vista Theater","tt0092099"),
-            (14,"09:20","2023-02-04","Garneau Theater","tt0876563"),
-            (15,"19:25","2023-02-04","Royal Cinema","tt0876563"),
-            (16,"12:30","2049-01-01[","Atlantic","tt1856101"),
-            (17,"21:00","2022-11-06","Astoria","tt0088247"),
-            (18,"22:20","2022-11-06","Maximteatern","tt0088247"),
-            (19,"13:30","2022-08-04","Draken","tt4912910");
+-- NOTE: RemainingSeats is currently hard-coded, see commented out code for a solution (has a bug though)
+INSERT OR REPLACE
+INTO        Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey, RemainingSeats)
+VALUES      (1,"10:00","2023-01-15","Artcraft Theater","tt1630029", 450),
+            (2,"13:15","2023-01-01","Artcraft Theater","tt0109830", 450),
+            (3,"17:00","2023-01-23","Artcraft Theater","tt0109830", 450),
+            (4,"21:20","2023-01-11","Booth Theater","tt0102926", 750),
+            (5,"19:10","2022-10-06","Capitol Theater","tt0468569", 900),
+            (6,"22:45","2022-10-06","Capitol Theater","tt0468569", 900),
+            (7,"19:35","2022-12-16","Cliff Theater","tt0468569", 40),
+            (8,"14:00","2022-12-17","Los Angeles Theater","tt0088847", 1000),
+            (9,"18:30","2022-12-18","Los Angeles Theater","tt0088847", 1000),
+            (10,"18:15","2022-12-19","Paramount Theater","tt0092099", 12),
+            (11,"21:20","2022-12-19","Paramount Theater","tt0092099", 12),
+            (12,"18:15","2022-12-19","Tower Theater","tt0092099", 1),
+            (13,"23:00","2023-02-01","Vista Theater","tt0092099", 72),
+            (14,"09:20","2023-02-04","Garneau Theater","tt0876563", 450),
+            (15,"19:25","2023-02-04","Royal Cinema","tt0876563", 750),
+            (16,"12:30","2049-01-01","Atlantic","tt1856101", 900),
+            (17,"21:00","2022-11-06","Astoria","tt0088247", 204),
+            (18,"22:20","2022-11-06","Maximteatern","tt0088247", 208),
+            (19,"13:30","2022-08-04","Draken","tt4912910", 10);
+
+-- Also initialize remaining seats
+-- UPDATE  Performance
+-- SET     RemainingSeats = Theater.Capacity
+-- WHERE   
+--     SELECT      Capacity
+--     FROM        Performance
+--     LEFT JOIN   Theater
+--     USING       (TheaterName);
 
 -- Now fill in performance IDs
 INSERT OR   REPLACE
