@@ -129,11 +129,11 @@ def add_movie():
             VALUES     (?, ?, ?, ?)
             RETURNING IMDBKey
             """,
-            [movie_data['title'], movie_data['year'], movie_data['imdbKey'], ""]
+            [movie_data['imdbKey'], movie_data['title'], movie_data['year'], 4]
         )
 
         imdbKey = c.fetchone()[0]
-        print(imdbKey)
+        print(c.fetchone())
         if not imdbKey:
             response.status = 400
             return "Error\n"
@@ -156,7 +156,24 @@ def get_movies():
     """
 
     movie_data = request.json
-    pass
+    query = """
+        SELECT   MovieTitle, ProductionYear, IMDBKey
+        FROM     Movie
+        WHERE    1 = 1
+        """
+    params = []
+    if request.query.title:
+        query += " AND MovieTitle = ?"
+        params.append(unquote(request.query.title))
+    if request.query.year:
+        query += " AND ProductionYear - ?"
+        params.append(equest.query.year)
+    c = db.cursor()
+    c.execute(query, params)
+    found = [{"imdbKey": IMDBKey, "title": MovieTitle, "year": ProductionYear}
+             for IMDBKey, MovieTitle,ProductionYear in c]
+    response.status = 200
+    return {"data": found}
 
 @get('/movies/<imdb_key>')
 def get_specific_movie(imdb_key):

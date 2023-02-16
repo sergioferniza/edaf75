@@ -20,6 +20,7 @@ curl -X POST http://localhost:7007/movies -H 'Content-Type: application/json' -d
 Test Get Specific Movie:
 curl -X GET http://localhost:7007/movies/tt4912910
 curl -X GET http://localhost:7007/movies/tt1630029
+curl -X GET http://localhost:7007/movies/tt4975722
 Invalid: curl -X GET http://localhost:7007/movies/tt1630000
 
 Test Get Performances:
@@ -34,6 +35,8 @@ curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -
 
 Trigger Test:
 curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "jacob1576","pwd": "moVieAccount7428@","PerformanceId": 12}'
+
+
 
 
 Test Summary of All Tickets for a Given User:
