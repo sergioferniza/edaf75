@@ -157,7 +157,7 @@ def get_specific_movie(imdb_key):
             }
         ]
     else:
-        movie_dict = {[]}
+        movie_dict = []
     request.status = 200
 
     ### RETURN OUR DESIRED RESULT ###
