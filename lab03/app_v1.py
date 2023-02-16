@@ -11,7 +11,7 @@ from json import dumps
 import sqlite3
 from tabulate import tabulate
 from urllib.parse import unquote
-import hashlib
+from hashlib import sha256
 
 # Print SQLite3 version
 ver = sqlite3.sqlite_version_info
@@ -132,35 +132,87 @@ def get_movies():
 
 @get('/movies/<imdb_key>')
 def get_specific_movie(imdb_key):
-    """
-    TO DO SERGIO
-    Get a specific movie from the Movie table based on the IMDB key
-    """
-    """specific_movie_data = request.json"""
-    request.status = 100
-    return "Bazinga"
+
+    ### RETURN A SPECIFIC MOVIE BASED ON A GIVEN IMDB KEY ###
+    c = db.cursor()
+    c.execute("""
+    
+    SELECT MovieTitle, ProductionYear, IMDBKey
+    FROM MOVIE
+    WHERE IMDBKEY = ?
+    
+    """, (imdb_key,))
+
+
+    ### OBTAIN RESULTS AND PUT THEM IN A DICTIONARY ###
+    result = c.fetchone()
+    movie_dict = {
+
+        "MovieTitle": result[0],
+        "ProductionYear": result[1],
+        "IMDBKey": result[2]
+    
+    }
+    
+    request.status = 200
+
+    ### RETURN OUR DESIRED RESULT ###
+    return dumps(movie_dict)
 
 @post('/performances')
 def add_performance():
-    """
-    TO DO SERGIO
-    Add a performance to the Performance table
 
-    Raise errors if this happens
-    """
-    """performance_data = request.json"""
-    request.status = 100
-    return "Dong"
+    ### ADD TO THE DB A NEW PERFORMANCE ENTRY WITH ALL NECESSARY DATA ###
+    performance = request.json
+
+    c = db.cursor()
+    c.execute(
+        """
+
+        INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
+        VALUES (?, ?, ?, ?, ?)
+
+        """, (
+            performance["PerformanceId"],
+            performance["StartTime"],
+            performance["PerformanceDate"],
+            performance["TheaterName"],
+            performance["IMDBKey"]
+        )
+    )
+
+    ### COMMIT THE NEW ENTRY TO THE DB ###
+    db.commit()
+    request.status = 201
 
 @get('/performances')
 def get_performances():
+
+    ### RETURN THE PERFORMANCE TABLE ###
+    c = db.cursor()
+    c.execute("""
+    
+    SELECT *
+    FROM Performance
+    
     """
-    TO DO SERGIO
-    Get all performances from the Performance table
-    """
-    """performance_data = request.json"""
-    request.status = 100
-    return "Ding"
+
+    )
+
+    ### GETS THE RESULT AND MAKES IT A DICT LIST ###
+    result = c.fetchall()
+    performance_list = [
+        {
+            "IMDBKey": row[0],
+            "TheaterName": row[1],
+            "PerformanceDate": row[2],
+            "StartTime": row[3]   
+        }
+        for row in result
+    ]
+
+    request.status = 200
+    return dumps(performance_list)
 
 @post('/tickets')
 def add_ticket():
@@ -172,7 +224,25 @@ def add_ticket():
     # Get ticket JSON from request
     ticket = request.json
 
-    # Define query and execute
+    # Check username and password
+    # Extract these fields from JSON
+    username = ticket['username']
+    password_hashed = hash(ticket['pwd'])
+    # Perform a query to get the correct password
+    c = db.cursor()
+    c.execute("""
+              SELECT UserPassword
+              FROM Customer
+              WHERE username=?
+              """, 
+              [username])
+    true_password_hashed = hash(c.fetchone()[0])
+    # Check if password is correct
+    if (password_hashed != true_password_hashed):
+        response.status = 401
+        return "Wrong user credentials\n"
+
+    # Now try to add ticket
     try:
         c = db.cursor()
         c.execute(
@@ -184,22 +254,18 @@ def add_ticket():
             """,
             [ticket['username'], ticket['PerformanceId']]
         )
+
+        ticket_id = c.fetchone()[0]
+        if not ticket_id:
+            response.status = 400
+            return "Error\n"
+        else:
+            db.commit()
+            response.status = 200
+            return f"/tickets/{ticket_id}\n"
     except sqlite3.IntegrityError:
         response.status = 400
         return "No tickets left\n"
-
-
-    # Check if insertions ran correctly
-    # ** TODO: Add error checking to see if a ticket can even be bought
-
-    ticket_id = c.fetchone()
-    if not ticket_id:
-        response.status = 400
-        return "Error\n"
-    else:
-        db.commit()
-        response.status = 200
-        return f"/tickets/{ticket_id}\n"
 
 @get('/users/<username>/tickets')
 def get_users_ticket(username):
@@ -244,6 +310,8 @@ def get_users_ticket(username):
     # Return query results using dumps() for pretty printing
     return dumps({"data": results}, indent=4)
 
+def hash(msg):
+    return sha256(msg.encode('utf-8')).hexdigest()
 
 ##### Start running REST server #####
 run(host=HOST, port=PORT)
