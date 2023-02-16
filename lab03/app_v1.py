@@ -137,7 +137,7 @@ def get_specific_movie(imdb_key):
     c = db.cursor()
     c.execute("""
     
-    SELECT MovieTitle, ProductionYear, IMDBKey
+    SELECT IMDBKey, MovieTitle, ProductionYear
     FROM MOVIE
     WHERE IMDBKEY = ?
     
@@ -146,18 +146,19 @@ def get_specific_movie(imdb_key):
 
     ### OBTAIN RESULTS AND PUT THEM IN A DICTIONARY ###
     result = c.fetchone()
-    movie_dict = {
+    movie_dict = [
+        {
 
-        "MovieTitle": result[0],
-        "ProductionYear": result[1],
-        "IMDBKey": result[2]
+        "IMDBKey": result[0],
+        "MovieTitle": result[1],
+        "ProductionYear": result[2]
     
-    }
-    
+        }
+    ]
     request.status = 200
 
     ### RETURN OUR DESIRED RESULT ###
-    return dumps(movie_dict)
+    return dumps({"data": movie_dict}, indent = 4)
 
 @post('/performances')
 def add_performance():
@@ -212,7 +213,7 @@ def get_performances():
     ]
 
     request.status = 200
-    return dumps(performance_list)
+    return dumps({"data":performance_list}, indent = 4)
 
 @post('/tickets')
 def add_ticket():
