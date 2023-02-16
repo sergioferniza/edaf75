@@ -111,7 +111,6 @@ def add_customer():
         response.status = 400
         return ""
 
-
 @post('/movies')
 def add_movie():
     """
@@ -133,7 +132,8 @@ def add_movie():
             [movie_data['title'], movie_data['year'], movie_data['imdbKey'], ""]
         )
 
-        imdbKey = c.fetchone()[2]
+        imdbKey = c.fetchone()[0]
+        print(imdbKey)
         if not imdbKey:
             response.status = 400
             return "Error\n"
