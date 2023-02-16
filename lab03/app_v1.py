@@ -20,8 +20,7 @@ print("Using SQLite Version {}.{}.{}\n".format(ver[0], ver[1], ver[2]))
 # Configure connection information
 PORT    = 7007
 HOST    = "localhost"
-db      = sqlite3.connect("theaters.sqlite")
-#db      = sqlite3.connect("theaters.sqlite", isolation_level="IMMEDIATE")
+db      = sqlite3.connect("theaters_v2.sqlite")
 
 ####### Main REST server functions ########
 @get('/ping')
@@ -53,15 +52,13 @@ def reset_db():
     c.execute("DELETE FROM Customer")
     db.commit()
 
-    print("Deleted all tables!")
-
     # Populate the Theater table with dummy data, in another transaction
     #c = db.cursor()
     c.execute("""INSERT
                  INTO        Theater(TheaterName, Capacity)
-                 VALUES      ("Kino",10),
-                             ("Regal",16),
-                             ("Skandia",100)
+                 VALUES      ("Kino",2),
+                             ("Regal",7),
+                             ("Skandia",11)
                  RETURNING   TheaterName;
               """)
 
@@ -219,25 +216,16 @@ def add_performance():
 
     ### ADD TO THE DB A NEW PERFORMANCE ENTRY WITH ALL NECESSARY DATA ###
     performance = request.json
-
-    ### FIRST FIGURE OUT HOW MANY PERFORMANCES THERE ARE
-    # That way, use the next consecutive performance id (INT)
-    c = db.cursor()
-    c.execute("""SELECT count() FROM Performance""")
-    n_perfomances = c.fetchone()[0]
-    print(n_perfomances)
-
     try:
         c = db.cursor()
         c.execute(
             """
 
-            INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
-            VALUES      (?, ?, ?, ?, ?)
-            RETURNING   PerformanceHash
+            INSERT INTO Performance(StartTime, PerformanceDate, TheaterName, IMDBKey)
+            VALUES      (?, ?, ?, ?)
+            RETURNING   PerformanceId
 
             """, (
-                n_perfomances + 1,
                 performance["time"],
                 performance["date"],
                 performance["theater"],
@@ -245,14 +233,23 @@ def add_performance():
             )
         )
 
+        # Also initialize remaining seats to theater capacity
         phash = c.fetchone()[0]
         if (not phash):
             response.status = 400
             return "Error\n"
-        else:
-            db.commit()
-            request.status = 201
-            return f"/performances/{phash}\n"
+        
+        c2 = db.cursor()
+        c2.execute("""
+                   UPDATE Performance
+                   SET    RemainingSeats = (SELECT Capacity FROM Theater WHERE TheaterName=?)
+                   WHERE  PerformanceId=?
+                   """,
+                   [performance["theater"], phash])
+
+        db.commit()
+        request.status = 201
+        return f"/performances/{phash}\n"
     except sqlite3.IntegrityError:
         response.status = 400
         return "No such movie or theater\n"
@@ -264,7 +261,7 @@ def get_performances():
     ### RETURN THE PERFORMANCE TABLE ###
     c = db.cursor()
     c.execute("""
-              SELECT      PerformanceHash, PerformanceDate, StartTime, MovieTitle, ProductionYear, TheaterName
+              SELECT      PerformanceID, PerformanceDate, StartTime, MovieTitle, ProductionYear, TheaterName, RemainingSeats
               FROM        Performance
               LEFT JOIN   Movie
               USING       (IMDBKey)
@@ -275,15 +272,15 @@ def get_performances():
     result = c.fetchall()
     performance_list = [
         {
-            "performanceId": phash,
+            "performanceId": pid,
             "date": date,
             "startTime": time,
             "title": title,
             "year": year,
-            "theater": theater
-            # "remainingSeats": row[6]
+            "theater": theater, 
+            "remainingSeats": rem_seats
         }
-        for phash, date, time, title, year, theater in result
+        for pid, date, time, title, year, theater, rem_seats in result
     ]
 
     request.status = 200
@@ -327,7 +324,7 @@ def add_ticket():
             VALUES     (?, ?)
             RETURNING  TicketId
             """,
-            [ticket['username'], ticket['PerformanceId']]
+            [ticket['username'], ticket['performanceId']]
         )
 
         ticket_id = c.fetchone()[0]
@@ -336,7 +333,7 @@ def add_ticket():
             return "Error\n"
         else:
             db.commit()
-            response.status = 200
+            response.status = 201
             return f"/tickets/{ticket_id}\n"
     except sqlite3.IntegrityError:
         response.status = 400

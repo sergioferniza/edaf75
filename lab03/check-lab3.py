@@ -29,10 +29,14 @@ MOVIES = [("TheDig", "tt3661210", 2021),
           ("Palmer", "tt6857376", 2021),
           ("FindingOhana", "tt10332588", 2021)]
 
-
-THEATER_SIZES = {"Kino": 10,
-                 "Regal": 16,
-                 "Skandia": 100}
+# ** This is taking forever
+# THEATER_SIZES = {"Kino": 10,
+#                  "Regal": 16,
+#                  "Skandia": 100}
+# Try smaller theater sizes instead
+THEATER_SIZES = {"Kino": 2,
+                 "Regal": 7,
+                 "Skandia": 11}
 
 
 PERFORMANCES = [("tt3661210", "Regal", "2021-02-22", "19:00"),

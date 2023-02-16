@@ -37,13 +37,13 @@ curl -X GET http://localhost:7007/performances
 
 Test Add Ticket:
 Regular: CORRECT credentials
-curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "jacob1576","pwd": "moVieAccount7428@","PerformanceId": 3}'
+curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "jacob1576","pwd": "moVieAccount7428@","performanceId": 3}'
 
 Regular: INCORRECT credentials
-curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "jacob1576","pwd": "wrongpassword","PerformanceId": 3}'
+curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "jacob1576","pwd": "wrongpassword","performanceId": 3}'
 
 Trigger Test:
-curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "jacob1576","pwd": "moVieAccount7428@","PerformanceId": 12}'
+curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "jacob1576","pwd": "6e12b723686f464e8146a04ff6fe49234cb397c72cff251ad93926265367e027","performanceId": 12}'
 
 
 
