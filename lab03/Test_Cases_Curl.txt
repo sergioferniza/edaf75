@@ -11,6 +11,9 @@ curl -X GET http://localhost:7007/ping
 Test Reset:
 curl -X POST http://localhost:7007/reset
 
+Test Get Specific Movie:
+curl -X GET http://localhost:7007/movies/tt4912910
+curl -X GET http://localhost:7007/movies/tt1630029
 
 Test Add Ticket:
 Regular: CORRECT credentials
