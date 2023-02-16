@@ -239,12 +239,17 @@ def add_performance():
     )
 
     ### COMMIT THE NEW ENTRY TO THE DB ###
-    db.commit()
-    request.status = 201
-
-    # Return new performance hash
     phash = c.fetchone()[0]
-    return f"/performances/{phash}"
+    if (phash):
+        # Return new performance hash
+        db.commit()
+        request.status = 201
+        return f"/performances/{phash}\n"
+    else:
+        request.status = 400
+        return "No such movie or theater\n"
+    
+
 
 @get('/performances')
 def get_performances():

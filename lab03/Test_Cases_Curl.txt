@@ -18,6 +18,9 @@ Test Add Movie:
 curl -X POST http://localhost:7007/movies -H 'Content-Type: application/json' -d '{"imdbKey": "tt4975722", "title": "Moonlight", "year": 2016}'
 
 Test Add Performance:
+Existing Theater and Movie:
+curl -X POST http://localhost:7007/performances -H 'Content-Type: application/json' -d '{"imdbKey": "tt5580390", "theater": "Astoria", "date": "2021-02-22", "time": "19:00"}'
+Non-existant Theater:
 curl -X POST http://localhost:7007/performances -H 'Content-Type: application/json' -d '{"imdbKey": "tt5580390", "theater": "Kino", "date": "2021-02-22", "time": "19:00"}'
 
 Test Get Specific Movie:
