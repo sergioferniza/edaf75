@@ -86,25 +86,30 @@ def add_customer():
     Raise errors if this happens
     """
     customer_data = request.json
-    c = db.cursor()
-    c.execute(
-        """
-        INSERT
-        INTO       Customer(Username, CustomerName, UserPassword)
-        VALUES     (?, ?, ?)
-        RETURNING Username
-        """,
-        [customer_data['username'], customer_data['fullName'], customer_data['pwd']]
-    )
-    found = c.fetchall()
-    if not found:
+    password_hashed = hash(customer_data['pwd'])
+    try:
+        c = db.cursor()
+        c.execute(
+            """
+            INSERT
+            INTO       Customer(Username, CustomerName, UserPassword)
+            VALUES     (?, ?, ?)
+            RETURNING Username
+            """,
+            [customer_data['username'], customer_data['fullName'], password_hashed]
+        )
+
+        username = c.fetchone()[0]
+        if not username:
+            response.status = 400
+            return "Error\n"
+        else:
+            db.commit()
+            response.status = 200
+            return f"/users/{username}\n"
+    except sqlite3.IntegrityError:
         response.status = 400
-        return "Illegal..."
-    else:
-        db.commit()
-        response.status = 201
-        u_id, = found
-        return f"http://localhost:{PORT}/{u_id}"
+        return ""
 
 @post('/movies')
 def add_movie():
@@ -115,6 +120,30 @@ def add_movie():
     Raise errors if this happens
     """
     movie_data = request.json
+    password_hashed = hash(customer_data['pwd'])
+    try:
+        c = db.cursor()
+        c.execute(
+            """
+            INSERT
+            INTO       Customer(Username, CustomerName, UserPassword)
+            VALUES     (?, ?, ?)
+            RETURNING Username
+            """,
+            [customer_data['username'], customer_data['fullName'], password_hashed]
+        )
+
+        username = c.fetchone()[0]
+        if not username:
+            response.status = 400
+            return "Error\n"
+        else:
+            db.commit()
+            response.status = 200
+            return f"/users/{username}\n"
+    except sqlite3.IntegrityError:
+        response.status = 400
+        return ""
     pass
 
 @get('/movies')
@@ -136,11 +165,11 @@ def get_specific_movie(imdb_key):
     ### RETURN A SPECIFIC MOVIE BASED ON A GIVEN IMDB KEY ###
     c = db.cursor()
     c.execute("""
-    
+
     SELECT MovieTitle, ProductionYear, IMDBKey
     FROM MOVIE
     WHERE IMDBKEY = ?
-    
+
     """, (imdb_key,))
 
 
@@ -151,9 +180,9 @@ def get_specific_movie(imdb_key):
         "MovieTitle": result[0],
         "ProductionYear": result[1],
         "IMDBKey": result[2]
-    
+
     }
-    
+
     request.status = 200
 
     ### RETURN OUR DESIRED RESULT ###
@@ -191,10 +220,10 @@ def get_performances():
     ### RETURN THE PERFORMANCE TABLE ###
     c = db.cursor()
     c.execute("""
-    
+
     SELECT *
     FROM Performance
-    
+
     """
 
     )
@@ -206,7 +235,7 @@ def get_performances():
             "IMDBKey": row[0],
             "TheaterName": row[1],
             "PerformanceDate": row[2],
-            "StartTime": row[3]   
+            "StartTime": row[3]
         }
         for row in result
     ]
@@ -234,7 +263,7 @@ def add_ticket():
               SELECT UserPassword
               FROM Customer
               WHERE username=?
-              """, 
+              """,
               [username])
     true_password_hashed = hash(c.fetchone()[0])
     # Check if password is correct
