@@ -165,8 +165,13 @@ def get_specific_movie(imdb_key):
     ### RETURN A SPECIFIC MOVIE BASED ON A GIVEN IMDB KEY ###
     c = db.cursor()
     c.execute("""
+<<<<<<< HEAD
 
     SELECT MovieTitle, ProductionYear, IMDBKey
+=======
+    
+    SELECT IMDBKey, MovieTitle, ProductionYear
+>>>>>>> 38713a0af232929e06c81ed6391511f1c1f00d6c
     FROM MOVIE
     WHERE IMDBKEY = ?
 
@@ -175,6 +180,7 @@ def get_specific_movie(imdb_key):
 
     ### OBTAIN RESULTS AND PUT THEM IN A DICTIONARY ###
     result = c.fetchone()
+<<<<<<< HEAD
     movie_dict = {
 
         "MovieTitle": result[0],
@@ -183,10 +189,24 @@ def get_specific_movie(imdb_key):
 
     }
 
+=======
+    if result:
+        movie_dict = [
+            {
+
+            "IMDBKey": result[0],
+            "MovieTitle": result[1],
+            "ProductionYear": result[2]
+        
+            }
+        ]
+    else:
+        movie_dict = []
+>>>>>>> 38713a0af232929e06c81ed6391511f1c1f00d6c
     request.status = 200
 
     ### RETURN OUR DESIRED RESULT ###
-    return dumps(movie_dict)
+    return dumps({"data": movie_dict}, indent = 4)
 
 @post('/performances')
 def add_performance():
@@ -198,18 +218,18 @@ def add_performance():
     c.execute(
         """
 
-        INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
+        INSERT INTO Performance(performanceId, startTime, date, theater, imdbKey)
         VALUES (?, ?, ?, ?, ?)
 
         """, (
-            performance["PerformanceId"],
-            performance["StartTime"],
-            performance["PerformanceDate"],
-            performance["TheaterName"],
-            performance["IMDBKey"]
+            performance["performanceId"],
+            performance["startTime"],
+            performance["date"],
+            performance["theater"],
+            performance["imdbKey"]
         )
     )
-
+    
     ### COMMIT THE NEW ENTRY TO THE DB ###
     db.commit()
     request.status = 201
@@ -232,16 +252,27 @@ def get_performances():
     result = c.fetchall()
     performance_list = [
         {
+<<<<<<< HEAD
             "IMDBKey": row[0],
             "TheaterName": row[1],
             "PerformanceDate": row[2],
             "StartTime": row[3]
+=======
+            "performanceId": row[0],
+            "date": row[1],
+            "startTime": row[2],
+            "title": row[3]   
+            "year": row[4]
+            "theater": row[5]
+            ###"remainingSeats": row[6]
+>>>>>>> 38713a0af232929e06c81ed6391511f1c1f00d6c
         }
+
         for row in result
     ]
 
     request.status = 200
-    return dumps(performance_list)
+    return dumps({"data":performance_list}, indent = 4)
 
 @post('/tickets')
 def add_ticket():

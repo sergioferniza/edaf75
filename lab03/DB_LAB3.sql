@@ -1,5 +1,5 @@
--- DB_Lab2_Cleanup_v2.sql
--- Written by Jacob Krucinski on 07/02/23
+-- DB_Lab3.sql
+-- Written by Jacob Krucinski on 16/02/23
 --
 -- Attempt 2 for cleaning up database with new structure
 --
@@ -32,6 +32,7 @@ CREATE TABLE Theater
 
 CREATE TABLE Performance
 (
+    PerformanceHash TEXT DEFAULT (lower(hex(randomblob(16)))),
     PerformanceId   INT,
     StartTime       TIME,
     PerformanceDate DATE,
