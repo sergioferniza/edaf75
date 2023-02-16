@@ -223,32 +223,30 @@ def get_performances():
     ### RETURN THE PERFORMANCE TABLE ###
     c = db.cursor()
     c.execute("""
-
-    SELECT *
-    FROM Performance
-
-    """
-
-    )
+              SELECT      PerformanceHash, PerformanceDate, StartTime, MovieTitle, ProductionYear, TheaterName
+              FROM        Performance
+              LEFT JOIN   Movie
+              USING       (IMDBKey)
+              """
+              )
 
     ### GETS THE RESULT AND MAKES IT A DICT LIST ###
     result = c.fetchall()
     performance_list = [
         {
-            "performanceId": row[0],
-            "date": row[1],
-            "startTime": row[2],
-            "title": row[3],
-            "year": row[4],
-            "theater": row[5]
-            ###"remainingSeats": row[6]
+            "performanceId": phash,
+            "date": date,
+            "startTime": time,
+            "title": title,
+            "year": year,
+            "theater": theater
+            # "remainingSeats": row[6]
         }
-
-        for row in result
+        for phash, date, time, title, year, theater in result
     ]
 
     request.status = 200
-    return dumps({"data":performance_list}, indent = 4)
+    return dumps({"data": performance_list}, indent=4)
 
 @post('/tickets')
 def add_ticket():
