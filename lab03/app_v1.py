@@ -111,6 +111,7 @@ def add_customer():
         response.status = 400
         return ""
 
+
 @post('/movies')
 def add_movie():
     """
@@ -120,31 +121,29 @@ def add_movie():
     Raise errors if this happens
     """
     movie_data = request.json
-    password_hashed = hash(customer_data['pwd'])
     try:
         c = db.cursor()
         c.execute(
             """
             INSERT
-            INTO       Customer(Username, CustomerName, UserPassword)
-            VALUES     (?, ?, ?)
-            RETURNING Username
+            INTO       movie(MovieTitle, ProductionYear, IMDBKey, RunningTime)
+            VALUES     (?, ?, ?, ?)
+            RETURNING IMDBKey
             """,
-            [customer_data['username'], customer_data['fullName'], password_hashed]
+            [movie_data['title'], movie_data['year'], movie_data['imdbKey'], ""]
         )
 
-        username = c.fetchone()[0]
-        if not username:
+        imdbKey = c.fetchone()[2]
+        if not imdbKey:
             response.status = 400
             return "Error\n"
         else:
             db.commit()
             response.status = 200
-            return f"/users/{username}\n"
+            return f"/movies/{imdbKey}\n"
     except sqlite3.IntegrityError:
         response.status = 400
         return ""
-    pass
 
 @get('/movies')
 def get_movies():
@@ -165,7 +164,7 @@ def get_specific_movie(imdb_key):
     ### RETURN A SPECIFIC MOVIE BASED ON A GIVEN IMDB KEY ###
     c = db.cursor()
     c.execute("""
-    
+
     SELECT IMDBKey, MovieTitle, ProductionYear
     FROM MOVIE
     WHERE IMDBKEY = ?
@@ -182,7 +181,7 @@ def get_specific_movie(imdb_key):
             "IMDBKey": result[0],
             "MovieTitle": result[1],
             "ProductionYear": result[2]
-        
+
             }
         ]
     else:
@@ -213,7 +212,7 @@ def add_performance():
             performance["imdbKey"]
         )
     )
-    
+
     ### COMMIT THE NEW ENTRY TO THE DB ###
     db.commit()
     request.status = 201
@@ -239,8 +238,8 @@ def get_performances():
             "performanceId": row[0],
             "date": row[1],
             "startTime": row[2],
-            "title": row[3]   
-            "year": row[4]
+            "title": row[3],
+            "year": row[4],
             "theater": row[5]
             ###"remainingSeats": row[6]
         }
