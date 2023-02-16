@@ -153,7 +153,6 @@ def get_movies():
 
     Returned in JSON format
     """
-
     movie_data = request.json
     query = """
         SELECT   MovieTitle, ProductionYear, IMDBKey
@@ -169,10 +168,18 @@ def get_movies():
         params.append(unquote(request.query.year))
     c = db.cursor()
     c.execute(query, params)
-    found = [{"imdbKey": IMDBKey, "title": MovieTitle, "year": ProductionYear}
-             for MovieTitle, ProductionYear, IMDBKey in c]
+    result = c.fetchall()
+    movies_list = [
+        {
+            "imdbKey": IMDBKey,
+            "title": MovieTitle,
+            "year": Prod,
+        }
+        for MovieTitle, Prod, IMDBKey in result
+    ]
+
     response.status = 200
-    return {"data": found}
+    return dumps({"data": movies_list}, indent=4)
 
 @get('/movies/<imdb_key>')
 def get_specific_movie(imdb_key):
