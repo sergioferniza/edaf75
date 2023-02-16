@@ -17,6 +17,7 @@ curl -X POST http://localhost:7007/users -H 'Content-Type: application/json' -d 
 Test Add Movie:
 curl -X POST http://localhost:7007/movies -H 'Content-Type: application/json' -d '{"imdbKey": "tt4975722", "title": "Moonlight", "year": 2016}'
 curl -X POST http://localhost:7007/movies -H 'Content-Type: application/json' -d '{"imdbKey": "tt4975742", "title": "Me mario", "year": 4}'
+curl -X POST http://localhost:7007/movies -H 'Content-Type: application/json' -d '{"imdbKey": "tt4975743", "title": "Binge", "year": 1200}'
 
 
 Test Add Performance:

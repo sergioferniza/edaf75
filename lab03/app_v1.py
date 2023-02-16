@@ -125,7 +125,7 @@ def add_movie():
         c.execute(
             """
             INSERT
-            INTO       movie(MovieTitle, ProductionYear, IMDBKey, RunningTime)
+            INTO       Movie(IMDBKey, MovieTitle, ProductionYear, RunningTime)
             VALUES     (?, ?, ?, ?)
             RETURNING IMDBKey
             """,
@@ -133,7 +133,6 @@ def add_movie():
         )
 
         imdbKey = c.fetchone()[0]
-        print(c.fetchone())
         if not imdbKey:
             response.status = 400
             return "Error\n"
@@ -167,11 +166,11 @@ def get_movies():
         params.append(unquote(request.query.title))
     if request.query.year:
         query += " AND ProductionYear - ?"
-        params.append(unquote(equest.query.year))
+        params.append(unquote(request.query.year))
     c = db.cursor()
     c.execute(query, params)
     found = [{"imdbKey": IMDBKey, "title": MovieTitle, "year": ProductionYear}
-             for IMDBKey, MovieTitle, ProductionYear in c]
+             for ProductionYear, MovieTitle, IMDBKey in c]
     response.status = 200
     return {"data": found}
 
