@@ -173,15 +173,15 @@ def add_performance():
     c.execute(
         """
 
-        INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
+        INSERT INTO Performance(performanceId, startTime, date, theater, imdbKey)
         VALUES (?, ?, ?, ?, ?)
 
         """, (
-            performance["PerformanceId"],
-            performance["StartTime"],
-            performance["PerformanceDate"],
-            performance["TheaterName"],
-            performance["IMDBKey"]
+            performance["performanceId"],
+            performance["startTime"],
+            performance["date"],
+            performance["theater"],
+            performance["imdbKey"]
         )
     )
     
@@ -207,11 +207,15 @@ def get_performances():
     result = c.fetchall()
     performance_list = [
         {
-            "IMDBKey": row[0],
-            "TheaterName": row[1],
-            "PerformanceDate": row[2],
-            "StartTime": row[3]   
+            "performanceId": row[0],
+            "date": row[1],
+            "startTime": row[2],
+            "title": row[3]   
+            "year": row[4]
+            "theater": row[5]
+            ###"remainingSeats": row[6]
         }
+
         for row in result
     ]
 
