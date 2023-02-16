@@ -64,7 +64,7 @@ def reset_db():
                              ("Skandia",100)
                  RETURNING   TheaterName;
               """)
-    
+
     # Check if insertions ran correctly
     found = c.fetchall()            # MAKE SURE TO USE FETCHALL, otherwise you will get a 500 error
     #print(found)
@@ -96,7 +96,7 @@ def add_customer():
         """,
         [customer_data['username'], customer_data['fullName'], customer_data['pwd']]
     )
-    found = c.fetchone()
+    found = c.fetchall()
     if not found:
         response.status = 400
         return "Illegal..."
