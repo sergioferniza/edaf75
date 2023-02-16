@@ -170,7 +170,7 @@ def get_movies():
     c = db.cursor()
     c.execute(query, params)
     found = [{"imdbKey": IMDBKey, "title": MovieTitle, "year": ProductionYear}
-             for ProductionYear, MovieTitle, IMDBKey in c]
+             for MovieTitle, ProductionYear, IMDBKey in c]
     response.status = 200
     return {"data": found}
 
@@ -238,17 +238,12 @@ def add_performance():
     )
 
     ### COMMIT THE NEW ENTRY TO THE DB ###
-    phash = c.fetchone()[0]
-    if (phash):
-        # Return new performance hash
-        db.commit()
-        request.status = 201
-        return f"/performances/{phash}\n"
-    else:
-        request.status = 400
-        return "No such movie or theater\n"
-    
+    db.commit()
+    request.status = 201
 
+    # Return new performance hash
+    phash = c.fetchone()[0]
+    return f"/performances/{phash}"
 
 @get('/performances')
 def get_performances():
