@@ -132,35 +132,87 @@ def get_movies():
 
 @get('/movies/<imdb_key>')
 def get_specific_movie(imdb_key):
-    """
-    TO DO SERGIO
-    Get a specific movie from the Movie table based on the IMDB key
-    """
-    """specific_movie_data = request.json"""
-    request.status = 100
-    return "Bazinga"
+
+    ### RETURN A SPECIFIC MOVIE BASED ON A GIVEN IMDB KEY ###
+    c = db.cursor()
+    c.execute("""
+    
+    SELECT MovieTitle, ProductionYear, RunningTime
+    FROM MOVIE
+    WHERE IMDBKEY = ?
+    
+    """, (imdb_key,))
+
+
+    ### OBTAIN RESULTS AND PUT THEM IN A DICTIONARY ###
+    result = c.fetchone()
+    movie_dict = {
+
+        "MovieTitle": result[0],
+        "ProductionYear": result[1],
+        "RunningTime": result[2]
+    
+    }
+    
+    request.status = 200
+
+    ### RETURN OUR DESIRED RESULT ###
+    return dumps(movie_dict)
 
 @post('/performances')
 def add_performance():
-    """
-    TO DO SERGIO
-    Add a performance to the Performance table
 
-    Raise errors if this happens
-    """
-    """performance_data = request.json"""
-    request.status = 100
-    return "Dong"
+    ### ADD TO THE DB A NEW PERFORMANCE ENTRY WITH ALL NECESSARY DATA ###
+    performance = request.json
+
+    c = db.cursor()
+    c.execute(
+        """
+
+        INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
+        VALUES (?, ?, ?, ?, ?)
+
+        """, (
+            performance["PerformanceId"],
+            performance["StartTime"],
+            performance["PerformanceDate"],
+            performance["TheaterName"],
+            performance["IMDBKey"]
+        )
+    )
+
+    ### COMMIT THE NEW ENTRY TO THE DB ###
+    db.commit()
+    request.status = 201
 
 @get('/performances')
 def get_performances():
+
+    ### RETURN THE PERFORMANCE TABLE ###
+    c = db.cursor()
+    c.execute("""
+    
+    SELECT *
+    FROM Performance
+    
     """
-    TO DO SERGIO
-    Get all performances from the Performance table
-    """
-    """performance_data = request.json"""
-    request.status = 100
-    return "Ding"
+
+    )
+
+    ### GETS THE RESULT AND MAKES IT A DICT LIST ###
+    result = c.fetchall()
+    performance_list = [
+        {
+            "IMDBKey": row[0],
+            "TheaterName": row[1],
+            "PerformanceDate": row[2],
+            "StartTime": row[3]   
+        }
+        for row in result
+    ]
+
+    request.status = 200
+    return dumps(performance_list)
 
 @post('/tickets')
 def add_ticket():
