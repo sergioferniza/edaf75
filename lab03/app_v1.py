@@ -227,30 +227,36 @@ def add_performance():
     n_perfomances = c.fetchone()[0]
     print(n_perfomances)
 
-    c = db.cursor()
-    c.execute(
-        """
+    try:
+        c = db.cursor()
+        c.execute(
+            """
 
-        INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
-        VALUES      (?, ?, ?, ?, ?)
-        RETURNING   PerformanceHash
+            INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
+            VALUES      (?, ?, ?, ?, ?)
+            RETURNING   PerformanceHash
 
-        """, (
-            n_perfomances + 1,
-            performance["time"],
-            performance["date"],
-            performance["theater"],
-            performance["imdbKey"]
+            """, (
+                n_perfomances + 1,
+                performance["time"],
+                performance["date"],
+                performance["theater"],
+                performance["imdbKey"]
+            )
         )
-    )
 
-    ### COMMIT THE NEW ENTRY TO THE DB ###
-    db.commit()
-    request.status = 201
+        phash = c.fetchone()[0]
+        if (not phash):
+            response.status = 400
+            return "Error\n"
+        else:
+            db.commit()
+            request.status = 201
+            return f"/performances/{phash}\n"
+    except sqlite3.IntegrityError:
+        response.status = 400
+        return "No such movie or theater\n"
 
-    # Return new performance hash
-    phash = c.fetchone()[0]
-    return f"/performances/{phash}"
 
 @get('/performances')
 def get_performances():
