@@ -146,15 +146,18 @@ def get_specific_movie(imdb_key):
 
     ### OBTAIN RESULTS AND PUT THEM IN A DICTIONARY ###
     result = c.fetchone()
-    movie_dict = [
-        {
+    if result:
+        movie_dict = [
+            {
 
-        "IMDBKey": result[0],
-        "MovieTitle": result[1],
-        "ProductionYear": result[2]
-    
-        }
-    ]
+            "IMDBKey": result[0],
+            "MovieTitle": result[1],
+            "ProductionYear": result[2]
+        
+            }
+        ]
+    else:
+        movie_dict = {[]}
     request.status = 200
 
     ### RETURN OUR DESIRED RESULT ###
@@ -181,7 +184,7 @@ def add_performance():
             performance["IMDBKey"]
         )
     )
-
+    
     ### COMMIT THE NEW ENTRY TO THE DB ###
     db.commit()
     request.status = 201
