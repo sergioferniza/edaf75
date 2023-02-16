@@ -150,7 +150,7 @@ def get_specific_movie(imdb_key):
 
         "MovieTitle": result[0],
         "ProductionYear": result[1],
-        "RunningTime": result[2]
+        "IMDBKey": result[2]
     
     }
     
