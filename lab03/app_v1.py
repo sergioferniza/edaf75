@@ -139,7 +139,7 @@ def add_movie():
             return "Error\n"
         else:
             db.commit()
-            response.status = 200
+            response.status = 201
             return f"/movies/{imdbKey}\n"
     except sqlite3.IntegrityError:
         response.status = 400
@@ -214,16 +214,24 @@ def add_performance():
     ### ADD TO THE DB A NEW PERFORMANCE ENTRY WITH ALL NECESSARY DATA ###
     performance = request.json
 
+    ### FIRST FIGURE OUT HOW MANY PERFORMANCES THERE ARE 
+    # That way, use the next consecutive performance id (INT) 
+    c = db.cursor()
+    c.execute("""SELECT count() FROM Performance""")
+    n_perfomances = c.fetchone()[0]
+    print(n_perfomances)
+
     c = db.cursor()
     c.execute(
         """
 
-        INSERT INTO Performance(performanceId, startTime, date, theater, imdbKey)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO Performance(PerformanceId, StartTime, PerformanceDate, TheaterName, IMDBKey)
+        VALUES      (?, ?, ?, ?, ?)
+        RETURNING   PerformanceHash
 
         """, (
-            performance["performanceId"],
-            performance["startTime"],
+            n_perfomances + 1,
+            performance["time"],
             performance["date"],
             performance["theater"],
             performance["imdbKey"]
@@ -233,6 +241,10 @@ def add_performance():
     ### COMMIT THE NEW ENTRY TO THE DB ###
     db.commit()
     request.status = 201
+
+    # Return new performance hash
+    phash = c.fetchone()[0]
+    return f"/performances/{phash}"
 
 @get('/performances')
 def get_performances():
@@ -287,7 +299,7 @@ def add_ticket():
               WHERE username=?
               """,
               [username])
-    true_password_hashed = hash(c.fetchone()[0])
+    true_password_hashed = c.fetchone()[0]
     # Check if password is correct
     if (password_hashed != true_password_hashed):
         response.status = 401
