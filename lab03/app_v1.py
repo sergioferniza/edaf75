@@ -201,7 +201,7 @@ def get_specific_movie(imdb_key):
         movie_dict = [
             {
 
-            "IMDBKey": result[0],
+            "imdbKey": result[0],
             "MovieTitle": result[1],
             "ProductionYear": result[2]
 
