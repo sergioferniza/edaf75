@@ -15,12 +15,14 @@ from hashlib import sha256
 
 # Print SQLite3 version
 ver = sqlite3.sqlite_version_info
-print("Using SQLite Version {}.{}.{}\n".format(ver[0], ver[1], ver[2]))
+print("Using SQLite Version {}.{}.{}".format(ver[0], ver[1], ver[2]))
 
 # Configure connection information
 PORT    = 7007
 HOST    = "localhost"
 db      = sqlite3.connect("theaters_v2.sqlite")
+db.execute("PRAGMA foreign_keys = 1")
+print("Foreign Keys Enabled!\n")
 
 ####### Main REST server functions ########
 @get('/ping')
@@ -45,12 +47,14 @@ def reset_db():
 
     # Delete all entries in table (BUT not the table itself), all in one transaction
     c = db.cursor()
+    db.execute("PRAGMA foreign_keys = 0")
     c.execute("DELETE FROM Theater")
     c.execute("DELETE FROM Performance")
     c.execute("DELETE FROM Movie")
     c.execute("DELETE FROM Ticket")
     c.execute("DELETE FROM Customer")
     db.commit()
+    db.execute("PRAGMA foreign_keys = 1")
 
     # Populate the Theater table with dummy data, in another transaction
     #c = db.cursor()
