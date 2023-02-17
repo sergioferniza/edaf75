@@ -19,7 +19,7 @@ print("Using SQLite Version {}.{}.{}".format(ver[0], ver[1], ver[2]))
 
 # Configure connection information
 PORT    = 7007
-HOST    = "localhost"
+HOST    = "127.0.0.1"
 db      = sqlite3.connect("theaters_v2.sqlite")
 db.execute("PRAGMA foreign_keys = 1")
 print("Foreign Keys Enabled!\n")
@@ -60,9 +60,9 @@ def reset_db():
     #c = db.cursor()
     c.execute("""INSERT
                  INTO        Theater(TheaterName, Capacity)
-                 VALUES      ("Kino",2),
-                             ("Regal",7),
-                             ("Skandia",11)
+                 VALUES      ("Kino",10),
+                             ("Regal",16),
+                             ("Skandia",100)
                  RETURNING   TheaterName;
               """)
 

@@ -1,0 +1,8 @@
+curl -X POST http://localhost:7007/reset
+
+curl -X POST http://localhost:7007/users -H 'Content-Type: application/json' -d '{"username": "alice", "fullName": "Alice Lidell", "pwd": "password"}'
+
+curl -X POST http://localhost:7007/performances -H 'Content-Type: application/json' -d '{"imdbKey": "tt0102926", "theater": "Kino", "date": "2021-02-22", "time": "19:00"}'
+
+curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "alice","pwd": "password","performanceId": 1}'
+curl -X POST http://localhost:7007/tickets -H 'Content-Type: application/json' -d '{"username": "alice","pwd": "password","performanceId": 1}'

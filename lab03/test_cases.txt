@@ -1,33 +1,33 @@
-Checking: GET http://localhost:7007/ping
-  => OK: GET http://localhost:7007/ping
-Checking: POST http://localhost:7007/reset
-  => OK: POST http://localhost:7007/reset
-Checking: POST http://localhost:7007/users
-  => OK: POST http://localhost:7007/users
-Checking: POST http://localhost:7007/movies
-  => OK: POST http://localhost:7007/movies
-Checking: POST http://localhost:7007/performances
-  => OK: POST http://localhost:7007/performances
-Checking: GET http://localhost:7007/movies
-  => OK: GET http://localhost:7007/movies
-Checking: GET http://localhost:7007/movies/tt3661210
-  => OK: GET http://localhost:7007/movies/tt3661210
-Checking: GET http://localhost:7007/movies/tt10016180
-  => OK: GET http://localhost:7007/movies/tt10016180
-Checking: GET http://localhost:7007/movies/tt6857376
-  => OK: GET http://localhost:7007/movies/tt6857376
-Checking: GET http://localhost:7007/movies/tt10332588
-  => OK: GET http://localhost:7007/movies/tt10332588
-Checking: GET http://localhost:7007/movies/not_a_real_imdb_key
-  => OK: GET http://localhost:7007/movies/not_a_real_imdb_key
-Checking: GET http://localhost:7007/performances
-  => OK: GET http://localhost:7007/performances
-Checking: POST http://localhost:7007/tickets
-  => OK: POST http://localhost:7007/tickets
-  => OK: GET http://localhost:7007/performances
-  => OK: GET http://localhost:7007/users/alice/tickets
-  => OK: GET http://localhost:7007/users/bob/tickets
-  => OK: GET http://localhost:7007/users/carol/tickets
+Checking: GET http://127.0.0.1:7007/ping
+  => OK: GET http://127.0.0.1:7007/ping
+Checking: POST http://127.0.0.1:7007/reset
+  => OK: POST http://127.0.0.1:7007/reset
+Checking: POST http://127.0.0.1:7007/users
+  => OK: POST http://127.0.0.1:7007/users
+Checking: POST http://127.0.0.1:7007/movies
+  => OK: POST http://127.0.0.1:7007/movies
+Checking: POST http://127.0.0.1:7007/performances
+  => OK: POST http://127.0.0.1:7007/performances
+Checking: GET http://127.0.0.1:7007/movies
+  => OK: GET http://127.0.0.1:7007/movies
+Checking: GET http://127.0.0.1:7007/movies/tt3661210
+  => OK: GET http://127.0.0.1:7007/movies/tt3661210
+Checking: GET http://127.0.0.1:7007/movies/tt10016180
+  => OK: GET http://127.0.0.1:7007/movies/tt10016180
+Checking: GET http://127.0.0.1:7007/movies/tt6857376
+  => OK: GET http://127.0.0.1:7007/movies/tt6857376
+Checking: GET http://127.0.0.1:7007/movies/tt10332588
+  => OK: GET http://127.0.0.1:7007/movies/tt10332588
+Checking: GET http://127.0.0.1:7007/movies/not_a_real_imdb_key
+  => OK: GET http://127.0.0.1:7007/movies/not_a_real_imdb_key
+Checking: GET http://127.0.0.1:7007/performances
+  => OK: GET http://127.0.0.1:7007/performances
+Checking: POST http://127.0.0.1:7007/tickets
+  => OK: POST http://127.0.0.1:7007/tickets
+  => OK: GET http://127.0.0.1:7007/performances
+  => OK: GET http://127.0.0.1:7007/users/alice/tickets
+  => OK: GET http://127.0.0.1:7007/users/bob/tickets
+  => OK: GET http://127.0.0.1:7007/users/carol/tickets
 
 ==========================================
            Initial version                
